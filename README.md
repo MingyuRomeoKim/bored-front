@@ -16,9 +16,12 @@ cd docker
 ```
 [2-2] 도커 디렉토리에서 .env.example 파일을 복사하여 .env 파일을 생성합니다. 
 
-[2-3] docker-compose.yml 파일을 기준으로 컨테이너를 생성합니다.
+[2-3] local 실행시 docker-compose-local.yml 파일을 기준으로 컨테이너를 생성합니다.
 ```bash
-docker-compose up -d
+# 실행
+docker-compose -f docker-compose-local.yml up -d
+# 종료
+docker-compose -f docker-compose-local.yml down
 ```
 
 ## 3. 프로젝트 실행
