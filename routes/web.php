@@ -15,3 +15,5 @@ Route::prefix('board')->group(function () {
 });
 
 Route::post('signUp', [AuthController::class, 'signUp'])->name('signUp');
+Route::post('login', [AuthController::class, 'login'])->name('login');
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');

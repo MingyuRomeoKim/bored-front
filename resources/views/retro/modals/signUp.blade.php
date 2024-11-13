@@ -19,8 +19,8 @@
                             <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}"
                                    required autofocus>
                             @if ($errors->signUp->has('name'))
-                                <span class="help-block
-                                <strong">{{ $errors->signUp->first('name') }}</strong>
+                                <span class="help-block">
+                                <strong>{{ $errors->signUp->first('name') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -34,8 +34,8 @@
                             <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}"
                                    required autofocus>
                             @if ($errors->signUp->has('email'))
-                                <span class="help-block
-                                <strong">{{ $errors->signUp->first('email') }}</strong>
+                                <span class="help-block">
+                                <strong>{{ $errors->signUp->first('email') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -49,8 +49,8 @@
                             <input id="password" type="password" class="form-control" name="password"
                                    value="{{old('password')}}" required>
                             @if ($errors->signUp->has('password'))
-                                <span class="help-block
-                                <strong">{{ $errors->signUp->first('password') }}</strong>
+                                <span class="help-block">
+                                <strong>{{ $errors->signUp->first('password') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -64,8 +64,8 @@
                             <input id="passwordCheck" type="password" class="form-control" name="passwordCheck"
                                    value="{{old('passwordCheck')}}" required>
                             @if ($errors->signUp->has('passwordCheck'))
-                                <span class="help-block
-                                <strong">{{ $errors->signUp->first('passwordCheck') }}</strong>
+                                <span class="help-block">
+                                <strong>{{ $errors->signUp->first('passwordCheck') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -79,8 +79,8 @@
                             <input id="phone" type="text" class="form-control" name="phone" value="{{old('phone')}}"
                                    required>
                             @if ($errors->signUp->has('phone'))
-                                <span class="help-block
-                                <strong">{{ $errors->signUp->first('phone') }}</strong>
+                                <span class="help-block">
+                                <strong>{{ $errors->signUp->first('phone') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -94,8 +94,8 @@
                             <input id="address" type="text" class="form-control" name="address"
                                    value="{{old('address')}}" required>
                             @if ($errors->signUp->has('address'))
-                                <span class="help-block
-                                <strong">{{ $errors->signUp->first('address') }}</strong>
+                                <span class="help-block">
+                                <strong>{{ $errors->signUp->first('address') }}</strong>
                                 </span>
                             @endif
                         </div>

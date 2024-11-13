@@ -35,8 +35,18 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" data-toggle="modal" data-target="#loginModal"><span style="color: #fefe54">L</span>ogin</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#signUpModal"><span style="color: #fefe54">S</span>ignUp</a></li>
+                @if(!\Illuminate\Support\Facades\Cookie::has('accessToken'))
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#loginModal"><span style="color: #fefe54">L</span>ogIn</a>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#signUpModal"><span style="color: #fefe54">S</span>ignUp</a>
+                    </li>
+                @else
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#logoutModal"><span style="color: #fefe54">L</span>ogOut</a>
+                    </li>
+                @endif
             </ul>
 
         </div><!--/.nav-collapse -->

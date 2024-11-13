@@ -10,3 +10,9 @@
 
 <!-- Modal signUp -->
 @include('retro/modals/signUp')
+
+<!-- Modal success -->
+@include('retro/modals/success')
+
+<!-- Modal logout -->
+@include('retro/modals/logout')

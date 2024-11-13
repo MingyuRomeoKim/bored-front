@@ -5305,6 +5305,12 @@ button.close {
     padding: 0 10px;
     line-height: 20px;
 }
+.modal-title-danger {
+    color: #ffffff;
+    background: red;
+    padding: 0 10px;
+    line-height: 20px;
+}
 .modal-body {
     position: relative;
     padding: 0 10px;

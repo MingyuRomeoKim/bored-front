@@ -16,11 +16,33 @@ class AuthService
         $this->url = env('API_URL');
     }
 
+    public function login(Request $request) : Response
+    {
+        $url = $this->url . '/api/v1/auth/login';
+
+        return Http::post($url, [
+            'email' => $request->email,
+            'password' => $request->password
+        ]);
+    }
+
+    public function logout(string $accessToken) : Response
+    {
+        $url = $this->url . '/api/v1/auth/logout';
+
+        return Http::withToken($accessToken)
+            ->withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])
+            ->delete($url);
+    }
+
     public function signUp(Request $request) :Response
     {
         $url = $this->url."/api/v1/auth/signup";
 
-        $response = Http::post($url, [
+        return Http::post($url, [
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
@@ -28,7 +50,5 @@ class AuthService
             'phone' => $request->phone,
             'address' => $request->address,
         ]);
-
-        return $response;
     }
 }
