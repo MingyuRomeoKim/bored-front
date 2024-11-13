@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\AuthController;
+
 
 Route::get('/', [MainController::class, 'index']);
 
@@ -11,3 +13,5 @@ Route::prefix('board')->group(function () {
     Route::get('/{id}', [BoardController::class, 'show']);
     Route::get('write', [BoardController::class, 'write']);
 });
+
+Route::post('signUp', [AuthController::class, 'signUp'])->name('signUp');
