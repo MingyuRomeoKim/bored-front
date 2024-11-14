@@ -41,6 +41,11 @@ class AuthController extends Controller
 
         if ($response->failed()) {
             $errorMessageJson = $response->json();
+
+            if ($errorMessageJson === null) {
+                $errorMessageJson = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
+            }
+
             return redirect()->back()->withErrors($errorMessageJson, 'login')->withInput();
         }
 
@@ -95,8 +100,12 @@ class AuthController extends Controller
 
         if ($response->failed()) {
             $errorMessageJson = $response->json('errorMessage');
-            $errorMessage = json_decode($errorMessageJson, true);
 
+            if ($errorMessageJson === null) {
+                $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
+            } else {
+                $errorMessage = json_decode($errorMessageJson, true);
+            }
             return redirect()->back()->withErrors($errorMessage, 'signUp')->withInput();
         }
 
