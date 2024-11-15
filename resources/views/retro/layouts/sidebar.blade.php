@@ -1,4 +1,4 @@
-<div class="col-sm-3 page-sidebar bordered">
+<div class="page-sidebar bordered">
     <aside>
         <div class="navbar-collapse collapse">
             <div class="inner-box">
@@ -24,7 +24,7 @@
                 <br>
 
                 <a class="btn btn-lg btn-primary btn-block" data-toggle="modal"
-                   data-target="#shareModal">Share this</a>
+                   data-target="#shareModal">글쓰기</a>
                 <br>
 
                 <div style="clear:both"></div>

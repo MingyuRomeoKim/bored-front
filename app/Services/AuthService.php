@@ -7,13 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class AuthService
+class AuthService extends BaseService
 {
-    private string $url;
-
     public function __construct()
     {
-        $this->url = env('API_URL');
+        parent::__construct();
     }
 
     public function login(Request $request) : Response

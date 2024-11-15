@@ -4,12 +4,13 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-
+        <div class="row col-sm-4">
             @include('retro/layouts/sidebar')
             <!--/.page-side-bar-->
+        </div>
 
-            <div class="col-sm-8 page-content col-thin-left bordered">
+        <div class="row col-sm-8">
+            <div class=" page-content col-thin-left bordered">
 
                 <form action="/search/" method="get" onsubmit="ga('send', 'event', 'appslist', 'dosearch');">
                     <div class="search-row-wrapper">
@@ -57,13 +58,13 @@
                                         </div>
 
                                         <div class="col-sm-2 right-border">
-                                                <?= date('Y-m-d', strtotime($post['created_at'])) ?>
+                                                <?= date('Y-m-d', strtotime($post['createdAt'])) ?>
                                         </div>
 
                                         <div class="col-sm-1 ">
                                             <h2 class="item-price">
 
-                                                <span style="color: #00733e"><?=$post['ip']?></span>
+                                                <span style="color: #00733e"><?= $post['ip'] ?></span>
                                             </h2>
                                         </div>
                                     </div>
@@ -72,47 +73,78 @@
                         @endif
 
                     </div> <!--/.adds-wrapper-->
-
                 </div>
-                {{--                <div class="pagination-bar text-center">--}}
-                {{--                    <ul class="pagination">--}}
-                {{--                        <!-- Previous Page Link -->--}}
-                {{--                        <li class="disabled"><span>&laquo;</span></li>--}}
 
-                {{--                        <!-- Pagination Elements -->--}}
-                {{--                        <!-- "Three Dots" Separator -->--}}
+                @if(isset($pagination) && $pagination !== null)
+                    <div class="pagination-bar text-center">
+                        <ul class="pagination">
+                            @php
+                                $totalRecordCount = $pagination['totalRecordCount'];
+                                $totalPageCount = $pagination['totalPageCount'];
+                                $currentPageNo = $pagination['currentPageNo'];
+                                $firstPage = 1;
+                                $lastPage = $totalPageCount;
+                                $adjacent = 2; // 현재 페이지 주변에 표시할 페이지 수
+                                $start = $currentPageNo - $adjacent;
+                                $end = $currentPageNo + $adjacent;
 
-                {{--                        <!-- Array Of Links -->--}}
-                {{--                        <li class="active"><span>1</span></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=2">2</a></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=3">3</a></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=4">4</a></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=5">5</a></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=6">6</a></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=7">7</a></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=8">8</a></li>--}}
-                {{--                        <!-- "Three Dots" Separator -->--}}
-                {{--                        <li class="disabled"><span>...</span></li>--}}
+                                if($start < $firstPage) {
+                                    $end += $firstPage - $start;
+                                    $start = $firstPage;
+                                }
 
-                {{--                        <!-- Array Of Links -->--}}
-                {{--                        <!-- "Three Dots" Separator -->--}}
+                                if($end > $lastPage) {
+                                    $start -= $end - $lastPage;
+                                    $end = $lastPage;
+                                    if($start < $firstPage) {
+                                        $start = $firstPage;
+                                    }
+                                }
+                            @endphp
 
-                {{--                        <!-- Array Of Links -->--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=24">24</a></li>--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=25">25</a></li>--}}
+                            <!-- Previous Page Link -->
+                            @if($currentPageNo == 1)
+                                <li class="disabled"><span>&laquo;</span></li>
+                            @else
+                                <li><a href="?currentPageNo={{ $currentPageNo - 1 }}" rel="prev">&laquo;</a></li>
+                            @endif
+                            <!-- First Page Link -->
+                            @if($start > $firstPage)
+                                <li><a href="?currentPageNo={{ $firstPage }}">{{ $firstPage }}</a></li>
+                                @if($start > $firstPage + 1)
+                                    <li class="disabled"><span>...</span></li>
+                                @endif
+                            @endif
 
-                {{--                        <!-- Next Page Link -->--}}
-                {{--                        <li><a href="/search/?q=retro game&amp;page=2" rel="next">&raquo;</a></li>--}}
-                {{--                    </ul>--}}
+                            <!-- Pagination Elements -->
+                            @for($i = $start; $i <= $end; $i++)
+                                @if($i == $currentPageNo)
+                                    <li class="active"><span>{{ $i }}</span></li>
+                                @else
+                                    <li><a href="?currentPageNo={{ $i }}">{{ $i }}</a></li>
+                                @endif
+                            @endfor
 
-                {{--                </div>--}}
-                <!--/.pagination-bar -->
+                            <!-- Last Page Link -->
+                            @if($end < $lastPage)
+                                @if($end < $lastPage - 1)
+                                    <li class="disabled"><span>...</span></li>
+                                @endif
+                                <li><a href="?currentPageNo={{ $lastPage }}">{{ $lastPage }}</a></li>
+                            @endif
 
+                            <!-- Next Page Link -->
+                            @if($currentPageNo == $lastPage)
+                                <li class="disabled"><span>&raquo;</span></li>
+                            @else
+                                <li><a href="?currentPageNo={{ $currentPageNo + 1 }}" rel="next">&raquo;</a></li>
+                            @endif
+                        </ul>
+                    </div>
+                    <!--/.pagination-bar -->
+                @endif
             </div>
             <!--/.page-content-->
-
         </div>
-
-
     </div>
 @endsection
