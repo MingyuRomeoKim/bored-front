@@ -102,7 +102,7 @@
 
 
         <!-- Modals -->
-        @include('retro/modals')
+        @include('retro/layouts/modals')
 
         <nav class="navbar navbar-default navbar-fixed-bottom ">
             <div class="container">

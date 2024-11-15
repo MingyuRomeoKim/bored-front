@@ -49,4 +49,15 @@ class AuthService extends BaseService
             'address' => $request->address,
         ]);
     }
+
+    public function checkAccessToken(string $accessToken) : Response
+    {
+        $url = $this->url . '/api/v1/auth/check/accessToken';
+
+        return Http::withToken($accessToken)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])
+            ->get($url);
+    }
 }

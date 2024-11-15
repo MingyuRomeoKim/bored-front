@@ -23,8 +23,7 @@
 
                 <br>
 
-                <a class="btn btn-lg btn-primary btn-block" data-toggle="modal"
-                   data-target="#shareModal">글쓰기</a>
+                <a class="btn btn-lg btn-primary btn-block" href="/write" >글쓰기</a>
                 <br>
 
                 <div style="clear:both"></div>
