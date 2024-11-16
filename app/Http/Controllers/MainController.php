@@ -55,10 +55,12 @@ class MainController extends Controller
             $errorMessageJson = $response->json();
 
             if ($errorMessageJson === null) {
-                $errorMessageJson = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
+                $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
+            } else {
+                $errorMessage = ['errorMessage' => $errorMessageJson['code'], 'errorCode' => $errorMessageJson['message']];
             }
-
-            return redirect()->back()->withErrors($errorMessageJson, 'login')->withInput();
+           
+            return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
         }
 
         return view('retro/write');

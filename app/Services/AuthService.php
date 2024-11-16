@@ -57,6 +57,7 @@ class AuthService extends BaseService
         return Http::withToken($accessToken)
             ->withHeaders([
                 'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ])
             ->get($url);
     }
