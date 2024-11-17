@@ -42,7 +42,7 @@
                         @if(isset($posts))
                             @foreach($posts as $key => $post)
                                 <a class="app-line" onclick="ga('send', 'event', 'appslist', 'goSite');"
-                                   href="/board/<?=$post['id']?>">
+                                   href="/article/<?=$post['id']?>">
                                     <div class="item-list row">
 
                                         <div class="col-sm-1 " style="width: 40px;">

@@ -3,19 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Dtos\Requests\PageableDto;
+use App\Dtos\Requests\PostCreateRequestDto;
 use App\Services\AuthService;
 use App\Services\BoardService;
 use App\Services\PostService;
+use App\Services\RegionService;
+use App\Services\ThemeService;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-    private PostService $postService;
-    private AuthService $authService;
-    public function __construct(PostService $postService, AuthService $authService)
+
+    public function __construct(PostService $postService, AuthService $authService, ThemeService $themeService, RegionService $regionService)
     {
-        $this->postService = $postService;
-        $this->authService = $authService;
+        parent::__construct($postService, $authService, $themeService, $regionService);
     }
 
     public function index(Request $request)
@@ -28,6 +29,8 @@ class MainController extends Controller
         ]);
 
         $response = $this->postService->getLists($pageableDto);
+        $themes = $this->themes;
+        $regions = $this->regions;
 
         $posts = null;
         $pagination = null;
@@ -38,12 +41,24 @@ class MainController extends Controller
             $pagination = $result['paginationInfo'];
         }
 
-        return view('retro/index', compact('posts', 'pagination'));
+        return view('retro/index', compact(
+            'posts',
+            'pagination',
+            'themes',
+            'regions',
+        ));
+    }
+
+    public function show(string $articleId)
+    {
+        $this->postService->
     }
 
     public function write(Request $request)
     {
         $accessToken = $request->cookie('accessToken');;
+        $themes = $this->themes;
+        $regions = $this->regions;
 
         if ($accessToken === null) {
             return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
@@ -52,17 +67,43 @@ class MainController extends Controller
         $response = $this->authService->checkAccessToken($accessToken);
 
         if ($response->failed()) {
+            cookie()->queue(cookie()->forget('accessToken'));
             $errorMessageJson = $response->json();
-
             if ($errorMessageJson === null) {
                 $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
             } else {
-                $errorMessage = ['errorMessage' => $errorMessageJson['code'], 'errorCode' => $errorMessageJson['message']];
+                $errorMessage = ['errorMessage' => $errorMessageJson['errorCode'], 'errorCode' => $errorMessageJson['errorMessage']];
             }
-           
+
             return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
         }
 
-        return view('retro/write');
+        return view('retro/write', compact(
+            'themes',
+            'regions',
+        ));
+    }
+
+    public function save(Request $request)
+    {
+        $request->validateWithBag('write', [
+            'title' => ['required'],
+            'content' => [
+                'required',
+            ]
+        ]);
+
+        $accessToken = $request->cookie('accessToken');;
+
+        $postCreateRequestDto = PostCreateRequestDto::builder([
+            'title' => $request->post('title'),
+            'content' => $request->post('content'),
+            'ip' => $request->ip(),
+            'themeId' => $request->post('themeId'),
+            'memberId' => $request->post('memberId')
+        ]);
+
+        $this->postService->savePost($postCreateRequestDto, $accessToken);
+
     }
 }

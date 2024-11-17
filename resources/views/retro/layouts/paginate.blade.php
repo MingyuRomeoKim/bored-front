@@ -1,4 +1,4 @@
-@if(isset($pagination) && $pagination !== null)
+@if(is_array($pagination) && $pagination['empty'] !== true)
     <div class="pagination-bar text-center">
         <ul class="pagination">
             @php

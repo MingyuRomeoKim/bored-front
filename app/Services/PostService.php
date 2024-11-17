@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dtos\Requests\PageableDto;
+use App\Dtos\Requests\PostCreateRequestDto;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 use Illuminate\Support\Facades\Http;
@@ -21,8 +22,13 @@ class PostService extends BaseService
         return Http::withQueryParameters($pageableDto->toArray())->get($url);
     }
 
-    public function getPost(int $id) : ?Post
+    public function savePost(PostCreateRequestDto $postCreateRequestDto, string $accessToken)
     {
-        return $this->postRepository->getPostById($id) ?? null;
+        $url = $this->url . '/api/v1/article/post/create';
+
+        $response = Http::withToken($accessToken)
+            ->post($url, $postCreateRequestDto);
+
+        dd($response);
     }
 }

@@ -27,10 +27,15 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                        aria-expanded="false"><span style="color: #fefe54">A</span>rea <span
                                 class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">여의도</a></li>
-                        <li><a href="#">영등포</a></li>
-                    </ul>
+                    @if(isset($regions) && is_array($regions) && count($regions) > 0)
+                        <ul class="dropdown-menu" role="menu">
+                            @foreach($regions as $key => $region)
+                                <li>
+                                    <a href="#">{{$region['title']}}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </li>
             </ul>
 

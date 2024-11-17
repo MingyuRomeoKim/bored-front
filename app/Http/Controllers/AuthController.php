@@ -3,20 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Services\AuthService;
+use App\Services\PostService;
+use App\Services\RegionService;
+use App\Services\ThemeService;
+use http\Cookie;
 use http\Env;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use function PHPUnit\Framework\exactly;
 
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
+
 class AuthController extends Controller
 {
-    private AuthService $authService;
 
-
-    public function __construct(AuthService $authService)
+    public function __construct(PostService $postService, AuthService $authService, ThemeService $themeService, RegionService $regionService)
     {
-        $this->authService = $authService;
+        parent::__construct($postService, $authService, $themeService, $regionService);
     }
 
     /**
@@ -50,9 +55,20 @@ class AuthController extends Controller
         }
 
         $result = $response->json('result');
-        $accessTokenCookie = cookie('accessToken', $result['accessToken']);
 
-        return redirect()->back()->with('success', '축하드립니다! 로그인이 완료되었습니다.')->cookie($accessTokenCookie);
+        $accessTokenCookie = cookie('accessToken', $result['accessToken'], \env('JWT_EXPIRED_MIN'));
+        $userIdCookie = cookie('userId', $result['id'], \env('JWT_EXPIRED_MIN'));
+        $userNameCookie = cookie('userName', $result['name'], \env('JWT_EXPIRED_MIN'));
+        $userEmailCookie = cookie('userEmail', $result['email'], \env('JWT_EXPIRED_MIN'));
+
+        return redirect()
+            ->back()
+            ->with('success', '축하드립니다! 로그인이 완료되었습니다.')
+            ->cookie($accessTokenCookie)
+            ->cookie($userIdCookie)
+            ->cookie($userNameCookie)
+            ->cookie($userEmailCookie);
+
     }
 
 
@@ -66,11 +82,14 @@ class AuthController extends Controller
         $accessToken = $request->cookie()['accessToken'];
 
         $response = $this->authService->logout($accessToken);
-        
+
         // 쿠키 삭제
         cookie()->queue(cookie()->forget('accessToken'));
+        cookie()->queue(cookie()->forget('userEmail'));
+        cookie()->queue(cookie()->forget('userId'));
+        cookie()->queue(cookie()->forget('userName'));
 
-        return redirect()->back()->with('success', '로그아웃 완료!');
+        return redirect('/')->with('success', '로그아웃 완료!');
     }
 
     /**
