@@ -4,13 +4,15 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-
+        <div class="row col-sm-4">
             @include('retro/layouts/sidebar')
             <!--/.page-side-bar-->
+        </div>
 
+
+        <div class="row col-sm-8">
             @if(isset($post))
-            <div class="col-sm-8 page-content col-thin-left bordered">
+            <div class="page-content col-thin-left bordered">
 
                 <div class="row">
                     <div class="col-sm-8">
@@ -32,10 +34,10 @@
                                 <?=$post['ip']?>
                                 <br>
                                 <i class="fa fa-user" style="width: 18px;"></i> Developer:
-                                <a href="https://softwar.io/developers/618105376-peaksel"><?=$post->user->name?></a><br>
+                                <a href="https://softwar.io/developers/618105376-peaksel"><?=$post['member']['name']?></a><br>
                                 <br>
 
-                                <a class="btn btn-block btn-primary" href="mailto:<?=$post->user->email?>" target="_blank">Mail 보내기 </a>
+                                <a class="btn btn-block btn-primary" href="mailto:<?=$post['member']['email']?>" target="_blank">Mail 보내기 </a>
 
 
                             </div>
@@ -43,16 +45,11 @@
                         </div>
 
 
-
-
-
                         <br>
 
 
-
-
                         <p class="intro">
-                            <?=$post->content?>
+                            <?=$post['content']?>
                         </p>
 
 

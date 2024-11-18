@@ -22,6 +22,19 @@ class PostService extends BaseService
         return Http::withQueryParameters($pageableDto->toArray())->get($url);
     }
 
+    public function getDetail(string $postId, string $accessToken) : array
+    {
+        $url = $this->url . '/api/v1/article/post/detail/' . $postId;
+        $response = Http::withToken($accessToken)->get($url);
+
+        if ($response->failed()) {
+            dd($response->reason());
+        }
+
+        return $response->json('result');
+    }
+
+
     public function savePost(PostCreateRequestDto $postCreateRequestDto, string $accessToken)
     {
         $url = $this->url . '/api/v1/article/post/create';

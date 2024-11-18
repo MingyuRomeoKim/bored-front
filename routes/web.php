@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 
 
 Route::get('/', [MainController::class, 'index']);
+Route::get('/region/{regionId}/theme/{themeId}', [MainController::class, 'index']);
 Route::get('/write',[MainController::class, 'write']);
 Route::post('/write',[MainController::class, 'save']);
 Route::get('/article/{articleId}',[MainController::class, 'show']);

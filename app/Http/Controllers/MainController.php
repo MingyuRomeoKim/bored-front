@@ -19,8 +19,11 @@ class MainController extends Controller
         parent::__construct($postService, $authService, $themeService, $regionService);
     }
 
-    public function index(Request $request)
+    public function index(Request $request, string $regionId = null, string $themeId = null)
     {
+        $themes = $this->themes;
+        $regions = $this->regions;
+
         $pageableDto = PageableDto::builder([
             'currentPageNo' => $request->query('currentPageNo', 1),
             'recordsPerPage' => $request->query('recordsPerPage', 10),
@@ -29,8 +32,6 @@ class MainController extends Controller
         ]);
 
         $response = $this->postService->getLists($pageableDto);
-        $themes = $this->themes;
-        $regions = $this->regions;
 
         $posts = null;
         $pagination = null;
@@ -49,9 +50,19 @@ class MainController extends Controller
         ));
     }
 
-    public function show(string $articleId)
+    public function show(string $articleId, Request $request)
     {
-        $this->postService->
+        $themes = $this->themes;
+        $regions = $this->regions;
+
+        $accessToken = $request->cookie('accessToken');;
+        $post = $this->postService->getDetail($articleId, $accessToken);
+
+        return view('retro/show', compact(
+            'post',
+            'themes',
+            'regions',
+        ));
     }
 
     public function write(Request $request)
