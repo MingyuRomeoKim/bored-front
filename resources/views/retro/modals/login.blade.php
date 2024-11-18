@@ -43,7 +43,7 @@
                     @if($errors->login->has('errorMessage'))
                     <div class="form-group
                     {{ $errors->login->has('errorMessage') ? ' has-error' : '' }}">
-                        <label class="col-md-4 control-label">알수없는오류</label>
+                        <label class="col-md-4 control-label">Error!</label>
 
                         <div class="col-md-6">
                                 <span class="help-block">
