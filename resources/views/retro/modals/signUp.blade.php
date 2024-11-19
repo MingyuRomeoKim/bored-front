@@ -72,6 +72,28 @@
                     </div>
 
                     <div class="form-group
+                    {{ $errors->signUp->has('region') ? ' has-error' : '' }}">
+                        <label for="regionId" class="col-md-4 control-label">지역 설정</label>
+
+                        <div class="col-md-6">
+                            <select id="regionId" class="form-control" name="regionId" required>
+                                @foreach($regions as $region)
+                                    <option value="{{$region['id']}}"
+                                            {{ old('regionId') == $region['id'] ? 'selected' : '' }}>
+                                        {{$region['title']}}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @if ($errors->signUp->has('regionId'))
+                                <span class="help-block">
+                                <strong>{{ $errors->signUp->first('regionId') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group
                     {{ $errors->signUp->has('phone') ? ' has-error' : '' }}">
                         <label for="phone" class="col-md-4 control-label">Phone Number</label>
 

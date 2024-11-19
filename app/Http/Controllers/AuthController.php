@@ -104,6 +104,7 @@ class AuthController extends Controller
                 'regex:/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/',
             ],
             'passwordCheck' => 'required|same:password',
+            'regionId' => 'required|string',
             'phone' => 'required|string|regex:/^01[0-9]{8,9}$/',
             'address' => 'required|string',
         ]);

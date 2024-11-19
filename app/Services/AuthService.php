@@ -40,14 +40,17 @@ class AuthService extends BaseService
     {
         $url = $this->url."/api/v1/auth/signup";
 
-        return Http::post($url, [
+        $response = Http::post($url, [
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
             'passwordCheck' => $request->passwordCheck,
+            'regionId' => $request->regionId,
             'phone' => $request->phone,
             'address' => $request->address,
         ]);
+
+        return $response;
     }
 
     public function checkAccessToken(string $accessToken) : Response
