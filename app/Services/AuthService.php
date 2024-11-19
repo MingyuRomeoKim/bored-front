@@ -19,8 +19,8 @@ class AuthService extends BaseService
         $url = $this->url . '/api/v1/auth/login';
 
         return Http::post($url, [
-            'email' => $request->email,
-            'password' => $request->password
+            'email' => $request->post('login-email'),
+            'password' => $request->post('login-password')
         ]);
     }
 

@@ -14,9 +14,6 @@ abstract class Controller
     protected ThemeService $themeService;
     protected RegionService $regionService;
 
-    protected array $themes;
-    protected array $regions;
-
     public function __construct(
         PostService $postService,
         AuthService $authService,
@@ -28,8 +25,5 @@ abstract class Controller
         $this->authService = $authService;
         $this->themeService = $themeService;
         $this->regionService = $regionService;
-
-        $this->themes = $this->themeService->getThemes();
-        $this->regions = $this->regionService->getRegions();
     }
 }

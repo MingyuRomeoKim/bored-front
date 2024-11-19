@@ -21,9 +21,6 @@ class MainController extends Controller
 
     public function index(Request $request, string $regionId = null, string $themeId = null)
     {
-        $themes = $this->themes;
-        $regions = $this->regions;
-
         $pageableDto = PageableDto::builder([
             'currentPageNo' => $request->query('currentPageNo', 1),
             'recordsPerPage' => $request->query('recordsPerPage', 10),
@@ -44,17 +41,13 @@ class MainController extends Controller
 
         return view('retro/index', compact(
             'posts',
-            'pagination',
-            'themes',
-            'regions',
+            'pagination'
         ));
     }
 
     public function show(string $articleId, Request $request)
     {
         $accessToken = $request->cookie('accessToken');;
-        $themes = $this->themes;
-        $regions = $this->regions;
 
         if ($accessToken === null) {
             return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
@@ -77,17 +70,13 @@ class MainController extends Controller
         $post = $this->postService->getDetail($articleId, $accessToken);
 
         return view('retro/show', compact(
-            'post',
-            'themes',
-            'regions',
+            'post'
         ));
     }
 
     public function write(Request $request)
     {
-        $accessToken = $request->cookie('accessToken');;
-        $themes = $this->themes;
-        $regions = $this->regions;
+        $accessToken = $request->cookie('accessToken');
 
         if ($accessToken === null) {
             return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
@@ -107,10 +96,7 @@ class MainController extends Controller
             return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
         }
 
-        return view('retro/write', compact(
-            'themes',
-            'regions',
-        ));
+        return view('retro/write');
     }
 
     public function save(Request $request)

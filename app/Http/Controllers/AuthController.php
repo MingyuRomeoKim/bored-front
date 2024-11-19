@@ -6,15 +6,8 @@ use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\RegionService;
 use App\Services\ThemeService;
-use http\Cookie;
-use http\Env;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use function PHPUnit\Framework\exactly;
-
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
 
 class AuthController extends Controller
 {
