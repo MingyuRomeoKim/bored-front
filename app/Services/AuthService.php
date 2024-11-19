@@ -18,9 +18,9 @@ class AuthService extends BaseService
     {
         $url = $this->url . '/api/v1/auth/login';
 
-        return Http::post($url, [
-            'email' => $request->post('login-email'),
-            'password' => $request->post('login-password')
+        return  Http::post($url, [
+            'email' => $request->post('email'),
+            'password' => $request->post('password')
         ]);
     }
 
@@ -29,10 +29,6 @@ class AuthService extends BaseService
         $url = $this->url . '/api/v1/auth/logout';
 
         return Http::withToken($accessToken)
-            ->withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ])
             ->delete($url);
     }
 
@@ -40,7 +36,7 @@ class AuthService extends BaseService
     {
         $url = $this->url."/api/v1/auth/signup";
 
-        $response = Http::post($url, [
+        return Http::post($url, [
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
@@ -49,8 +45,6 @@ class AuthService extends BaseService
             'phone' => $request->phone,
             'address' => $request->address,
         ]);
-
-        return $response;
     }
 
     public function checkAccessToken(string $accessToken) : Response

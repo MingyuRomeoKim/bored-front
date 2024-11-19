@@ -47,23 +47,15 @@ class MainController extends Controller
 
     public function show(string $articleId, Request $request)
     {
-        $accessToken = $request->cookie('accessToken');;
+        $accessToken = $this->getAccessTokenKey();
 
-        if ($accessToken === null) {
+        if (is_null($accessToken)) {
             return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
         }
 
         $response = $this->authService->checkAccessToken($accessToken);
-
-        if ($response->failed()) {
-            cookie()->queue(cookie()->forget('accessToken'));
-            $errorMessageJson = $response->json();
-            if ($errorMessageJson === null) {
-                $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
-            } else {
-                $errorMessage = ['errorMessage' => $errorMessageJson['errorCode'], 'errorCode' => $errorMessageJson['errorMessage']];
-            }
-
+        $errorMessage = $this->isResponseFailed($response);
+        if ($errorMessage !== null) {
             return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
         }
 
@@ -76,23 +68,15 @@ class MainController extends Controller
 
     public function write(Request $request)
     {
-        $accessToken = $request->cookie('accessToken');
+        $accessToken = $this->getAccessTokenKey();
 
         if ($accessToken === null) {
             return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
         }
 
         $response = $this->authService->checkAccessToken($accessToken);
-
-        if ($response->failed()) {
-            cookie()->queue(cookie()->forget('accessToken'));
-            $errorMessageJson = $response->json();
-            if ($errorMessageJson === null) {
-                $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
-            } else {
-                $errorMessage = ['errorMessage' => $errorMessageJson['errorCode'], 'errorCode' => $errorMessageJson['errorMessage']];
-            }
-
+        $errorMessage = $this->isResponseFailed($response);
+        if ($errorMessage !== null) {
             return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
         }
 

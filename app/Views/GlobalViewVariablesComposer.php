@@ -4,6 +4,7 @@ namespace App\Views;
 
 use App\Services\RegionService;
 use App\Services\ThemeService;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\View\View;
 
 class GlobalViewVariablesComposer
@@ -24,6 +25,9 @@ class GlobalViewVariablesComposer
 
         $view->with('themes', $themes);
         $view->with('regions', $regions);
+
+        $userData = json_decode(Cookie::get('userData'), true);
+        $view->with('userData', $userData);
     }
 
 }

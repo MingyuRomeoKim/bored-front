@@ -40,7 +40,7 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                @if(!\Illuminate\Support\Facades\Cookie::has('accessToken'))
+                @if(!isset($userData) || $userData['accessToken'] === null)
                     <li>
                         <a href="#" data-toggle="modal" data-target="#loginModal"><span style="color: #fefe54">L</span>ogIn</a>
                     </li>

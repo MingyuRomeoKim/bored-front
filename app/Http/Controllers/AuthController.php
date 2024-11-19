@@ -36,32 +36,19 @@ class AuthController extends Controller
         ]);
 
         $response = $this->authService->login($request);
-
-        if ($response->failed()) {
-            $errorMessageJson = $response->json();
-
-            if ($errorMessageJson === null) {
-                $errorMessageJson = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
-            }
-
-            return redirect()->back()->withErrors($errorMessageJson, 'login')->withInput();
+        $errorMessage = $this->isResponseFailed($response);
+        if ($errorMessage !== null) {
+            return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
         }
 
-        $result = $response->json('result');
 
-        $accessTokenCookie = cookie('accessToken', $result['accessToken'], \env('JWT_EXPIRED_MIN'));
-        $userIdCookie = cookie('userId', $result['id'], \env('JWT_EXPIRED_MIN'));
-        $userNameCookie = cookie('userName', $result['name'], \env('JWT_EXPIRED_MIN'));
-        $userEmailCookie = cookie('userEmail', $result['email'], \env('JWT_EXPIRED_MIN'));
+        $result = $response->json('result');
+        $cookie = cookie('userData', json_encode($result), \env('JWT_EXPIRED_MIN'));
 
         return redirect()
             ->back()
             ->with('success', '축하드립니다! 로그인이 완료되었습니다.')
-            ->cookie($accessTokenCookie)
-            ->cookie($userIdCookie)
-            ->cookie($userNameCookie)
-            ->cookie($userEmailCookie);
-
+            ->cookie($cookie);
     }
 
 
@@ -72,15 +59,12 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $accessToken = $request->cookie()['accessToken'];
-
+        $accessToken = $this->getAccessTokenKey();
+        
         $response = $this->authService->logout($accessToken);
 
         // 쿠키 삭제
-        cookie()->queue(cookie()->forget('accessToken'));
-        cookie()->queue(cookie()->forget('userEmail'));
-        cookie()->queue(cookie()->forget('userId'));
-        cookie()->queue(cookie()->forget('userName'));
+        cookie()->queue(cookie()->forget('userData'));
 
         return redirect('/')->with('success', '로그아웃 완료!');
     }
@@ -110,17 +94,11 @@ class AuthController extends Controller
         ]);
 
         $response = $this->authService->signUp(request: $request);
-
-        if ($response->failed()) {
-            $errorMessageJson = $response->json('errorMessage');
-
-            if ($errorMessageJson === null) {
-                $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
-            } else {
-                $errorMessage = json_decode($errorMessageJson, true);
-            }
+        $errorMessage = $this->isResponseFailed($response);
+        if ($errorMessage !== null) {
             return redirect()->back()->withErrors($errorMessage, 'signUp')->withInput();
         }
+
 
         return redirect()->back()->with('success', '축하드립니다! 회원가입이 완료되었습니다.');
     }
