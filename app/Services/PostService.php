@@ -20,6 +20,11 @@ class PostService extends BaseService
         parent::__construct();
     }
 
+    public function getRegionList(string $regionId, PageableDto $pageableDto)
+    {
+
+    }
+
     public function getLists(PageableDto $pageableDto): array
     {
         $cacheKey = 'posts_' . Arr::join($pageableDto->toArray(), '_');

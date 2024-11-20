@@ -4,12 +4,12 @@
 
 @section('content')
     <div class="container">
-        <div class="row col-sm-4">
-            @include('retro/layouts/sidebar')
-            <!--/.page-side-bar-->
-        </div>
-
-        <div class="row col-sm-8">
+        <div class="row col-sm-12">
+            <div class=" page-content col-thin-left bordered">
+                <div class="category-list">
+                    전체 게시글
+                </div>
+            </div>
             <div class=" page-content col-thin-left bordered">
 
                 <form action="/search/" method="get" onsubmit="ga('send', 'event', 'appslist', 'dosearch');">
