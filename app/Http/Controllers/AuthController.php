@@ -60,7 +60,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $accessToken = $this->getAccessTokenKey();
-        
+
         $response = $this->authService->logout($accessToken);
 
         // 쿠키 삭제

@@ -30,14 +30,13 @@ class MainController extends Controller
 
         $response = $this->postService->getLists($pageableDto);
 
-        $posts = null;
-        $pagination = null;
-
-        if ($response->ok()) {
-            $result = $response->json('result');
-            $posts = $result['items'];
-            $pagination = $result['paginationInfo'];
+        if (!$response['success']) {
+            return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
         }
+
+        $result = $response['result'];
+        $posts = $result['items'];
+        $pagination = $result['paginationInfo'];
 
         return view('retro/index', compact(
             'posts',
@@ -59,7 +58,11 @@ class MainController extends Controller
             return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
         }
 
-        $post = $this->postService->getDetail($articleId, $accessToken);
+        $response = $this->postService->getDetail($articleId, $accessToken);
+        if (!$response['success']) {
+            return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
+        }
+        $post = $response['result'];
 
         return view('retro/show', compact(
             'post'
