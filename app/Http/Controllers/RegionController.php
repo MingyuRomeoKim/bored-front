@@ -43,7 +43,7 @@ class RegionController extends Controller
                 'sort' => $request->query('sort', 'createdAt,desc'),
             ]);
 
-            $response = $this->postService->getLists($pageableDto);
+            $response = $this->postService->getThemePosts($themeId, $accessToken, $pageableDto);
 
             if (!$response['success']) {
                 return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();

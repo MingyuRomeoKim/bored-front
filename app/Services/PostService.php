@@ -20,9 +20,31 @@ class PostService extends BaseService
         parent::__construct();
     }
 
-    public function getRegionList(string $regionId, PageableDto $pageableDto)
+    public function getThemePosts(string $themeId, string $accessToken, PageableDto $pageableDto)
     {
+        $cacheKey = 'theme_posts_' . $themeId . '_' . Arr::join($pageableDto->toArray(), '_');
+        $cacheKey = Str::replace(',', '_', $cacheKey);
 
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        $url = $this->url . '/api/v1/article/theme/' . $themeId . '/posts';
+
+        $response = Http::withToken($accessToken)
+            ->withQueryParameters($pageableDto->toArray())
+            ->get($url);
+        $errorMessage = $this->isResponseFailed($response);
+
+        if ($errorMessage !== null) {
+            $this->returnData['success'] = false;
+            $this->returnData['errorMessage'] = $errorMessage;
+        }
+
+        $this->returnData['result'] = $response->json('result');
+        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
+
+        return $this->returnData;
     }
 
     public function getLists(PageableDto $pageableDto): array
@@ -80,6 +102,6 @@ class PostService extends BaseService
         $response = Http::withToken($accessToken)
             ->post($url, $postCreateRequestDto);
 
-        dd($response);
+
     }
 }

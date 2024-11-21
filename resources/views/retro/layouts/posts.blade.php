@@ -1,6 +1,6 @@
 <div class=" page-content col-thin-left bordered">
 
-    @if(isset($posts))
+    @if(isset($posts) && is_array($posts) && count($posts) > 0)
         <form action="/search/" method="get" onsubmit="ga('send', 'event', 'appslist', 'dosearch');">
             <div class="search-row-wrapper">
                 <div class="container text-center">
@@ -68,7 +68,11 @@
         <!--/.pagination-bar -->
     @else
         <div class="alert alert-warning">
-            <strong>지역 혹은 카테고리를 선택해주세요.</strong>
+            @if(isset($posts))
+                <strong>해당 카테고리에는 작성된 글이 아직 없습니다.ㅠ</strong>
+            @else
+                <strong>지역 혹은 카테고리를 선택해주세요.</strong>
+            @endif
         </div>
     @endif
 </div>
