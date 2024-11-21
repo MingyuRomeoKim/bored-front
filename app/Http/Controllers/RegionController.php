@@ -18,6 +18,15 @@ class RegionController extends Controller
 
     public function index(Request $request, string $regionId = null, string $themeId = null)
     {
+        $accessToken = $this->getAccessTokenKey();
+
+        // themes
+        $response = $this->themeService->getRegionThemes($regionId, $accessToken);
+        if (!$response['success']) {
+            return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
+        }
+        $themes = $response['result'];
+
         $pageableDto = PageableDto::builder([
             'currentPageNo' => $request->query('currentPageNo', 1),
             'recordsPerPage' => $request->query('recordsPerPage', 10),
@@ -35,9 +44,10 @@ class RegionController extends Controller
         $posts = $result['items'];
         $pagination = $result['paginationInfo'];
 
-        return view('retro/index', compact(
+        return view('retro.region.list', compact(
             'posts',
-            'pagination'
+            'pagination',
+            'themes'
         ));
     }
 }
