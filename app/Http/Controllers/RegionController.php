@@ -19,35 +19,42 @@ class RegionController extends Controller
     public function index(Request $request, string $regionId = null, string $themeId = null)
     {
         $accessToken = $this->getAccessTokenKey();
+        $data = [
+            'themes' => null,
+            'posts' => null,
+            'pagination' => null,
+        ];
+        if (is_null($accessToken)) {
+            return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
+        }
 
         // themes
         $response = $this->themeService->getRegionThemes($regionId, $accessToken);
         if (!$response['success']) {
             return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
         }
-        $themes = $response['result'];
+        $data['themes'] = $response['result'];
 
-        $pageableDto = PageableDto::builder([
-            'currentPageNo' => $request->query('currentPageNo', 1),
-            'recordsPerPage' => $request->query('recordsPerPage', 10),
-            'pageSize' => $request->query('pageSize', 10),
-            'sort' => $request->query('sort', 'createdAt,desc'),
-        ]);
+        if (!is_null($themeId)) {
+            $pageableDto = PageableDto::builder([
+                'currentPageNo' => $request->query('currentPageNo', 1),
+                'recordsPerPage' => $request->query('recordsPerPage', 10),
+                'pageSize' => $request->query('pageSize', 10),
+                'sort' => $request->query('sort', 'createdAt,desc'),
+            ]);
 
-        $response = $this->postService->getLists($pageableDto);
+            $response = $this->postService->getLists($pageableDto);
 
-        if (!$response['success']) {
-            return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
+            if (!$response['success']) {
+                return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
+            }
+
+            $result = $response['result'];
+            $data['posts'] = $result['items'];
+            $data['pagination'] = $result['paginationInfo'];
         }
 
-        $result = $response['result'];
-        $posts = $result['items'];
-        $pagination = $result['paginationInfo'];
 
-        return view('retro.region.list', compact(
-            'posts',
-            'pagination',
-            'themes'
-        ));
+        return view('retro.region.list', $data);
     }
 }

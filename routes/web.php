@@ -13,6 +13,7 @@ Route::get('/article/{articleId}',[MainController::class, 'show']);
 
 Route::prefix('region')->group(function (){
     Route::get('/{regionId}', [\App\Http\Controllers\RegionController::class, 'index']);
+    Route::get('/{regionId}/theme/{themeId}', [\App\Http\Controllers\RegionController::class, 'index']);
 });
 
 Route::post('signUp', [AuthController::class, 'signUp'])->name('signUp');
