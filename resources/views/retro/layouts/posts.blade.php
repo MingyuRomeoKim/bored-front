@@ -1,6 +1,14 @@
 <div class=" page-content col-thin-left bordered">
 
+    <div class=" page-content col-thin-left bordered">
+        <div class="category-list">
+            게시글
+        </div>
+    </div>
+
     @if(isset($posts) && is_array($posts) && count($posts) > 0)
+        @if(isset($themes) && is_array($themes) && count($themes) > 0)
+        <br/>
         <form action="/search/" method="get" onsubmit="ga('send', 'event', 'appslist', 'dosearch');">
             <div class="search-row-wrapper">
                 <div class="container text-center">
@@ -19,15 +27,14 @@
                 </div>
             </div>
         </form>
-        <br>
-
+        <br/>
+        @endif
         <div class="category-list">
             <br>
 
             <!--/.listing-filter-->
 
             <div class="adds-wrapper">
-
 
                 @foreach($posts as $key => $post)
                     <a class="app-line" onclick="ga('send', 'event', 'appslist', 'goSite');"
