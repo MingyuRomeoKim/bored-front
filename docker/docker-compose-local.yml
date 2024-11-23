@@ -2,9 +2,9 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: laravel-playground
-    container_name: laravel-playground
+      dockerfile: php/Dockerfile
+    image: bored-front
+    container_name: bored-front
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
@@ -58,5 +58,6 @@ volumes:
 
 networks:
   app-network:
+    name: bored-network
     driver: bridge
 
