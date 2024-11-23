@@ -7,13 +7,13 @@ use App\Http\Controllers\RegionController;
 
 
 Route::get('/', [MainController::class, 'index']);
-Route::get('/write',[MainController::class, 'write']);
-Route::post('/write',[MainController::class, 'save']);
 Route::get('/article/{articleId}',[MainController::class, 'show']);
 
 Route::prefix('region')->group(function (){
     Route::get('/{regionTitleEn}', [RegionController::class, 'index']);
     Route::get('/{regionTitleEn}/theme/{themeTitleEn}', [RegionController::class, 'index']);
+    Route::get('/{regionTitleEn}/theme/{themeTitleEn}/write',[RegionController::class, 'write']);
+    Route::post('/{regionTitleEn}/theme/{themeTitleEn}/write',[RegionController::class, 'save']);
 });
 
 Route::post('signUp', [AuthController::class, 'signUp'])->name('signUp');

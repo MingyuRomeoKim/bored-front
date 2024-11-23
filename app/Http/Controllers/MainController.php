@@ -68,44 +68,4 @@ class MainController extends Controller
             'post'
         ));
     }
-
-    public function write(Request $request)
-    {
-        $accessToken = $this->getAccessTokenKey();
-
-        if ($accessToken === null) {
-            return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
-        }
-
-        $response = $this->authService->checkAccessToken($accessToken);
-        $errorMessage = $this->isResponseFailed($response);
-        if ($errorMessage !== null) {
-            return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
-        }
-
-        return view('retro/write');
-    }
-
-    public function save(Request $request)
-    {
-        $request->validateWithBag('write', [
-            'title' => ['required'],
-            'content' => [
-                'required',
-            ]
-        ]);
-
-        $accessToken = $request->cookie('accessToken');;
-
-        $postCreateRequestDto = PostCreateRequestDto::builder([
-            'title' => $request->post('title'),
-            'content' => $request->post('content'),
-            'ip' => $request->ip(),
-            'themeId' => $request->post('themeId'),
-            'memberId' => $request->post('memberId')
-        ]);
-
-        $this->postService->savePost($postCreateRequestDto, $accessToken);
-
-    }
 }

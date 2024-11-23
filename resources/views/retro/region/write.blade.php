@@ -1,11 +1,11 @@
-@extends('retro/layouts/app')
+@extends('retro.layouts.app')
 
 @section('main', 'Main Page')
 
 @section('content')
     <div class="container">
         <div class="row col-sm-4">
-            @include('retro/layouts/sidebar')
+            @include('retro.layouts.sidebar')
             <!--/.page-side-bar-->
         </div>
 
@@ -16,7 +16,7 @@
                 </h5>
                 <form class="form-horizontal" role="form" method="POST" action="{{ url('write') }}">
                     {{ csrf_field() }}
-
+                    
                     <div class="form-group
                     {{ $errors->write->has('title') ? ' has-error' : '' }}">
                         <label for="title" class="col-md-2 control-label">제목</label>
@@ -38,7 +38,8 @@
 
                         <div class="col-md-9">
 
-                            <textarea id="content" class="form-control" name="content" required autofocus>{{ old('content') }}</textarea>
+                            <textarea id="content" class="form-control" name="content" required
+                                      autofocus>{{ old('content') }}</textarea>
                             @if ($errors->write->has('content'))
                                 <span class="help-block">
                                 <strong>{{ $errors->write->first('content') }}</strong>

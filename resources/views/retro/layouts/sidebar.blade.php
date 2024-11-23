@@ -22,7 +22,7 @@
                 @endif
 
                 @if(request()->segment(3) == 'theme' && request()->segment(4) != null)
-                    <a class="btn btn-lg btn-primary btn-block" href="/write">글쓰기</a>
+                    <a class="btn btn-lg btn-primary btn-block" href="{{url()->current()}}/write">글쓰기</a>
                     <br/>
                 @endif
 

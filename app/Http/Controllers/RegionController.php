@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dtos\Requests\PageableDto;
+use App\Dtos\Requests\PostCreateRequestDto;
 use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\RegionService;
@@ -42,7 +43,7 @@ class RegionController extends Controller
                 $response['errorMessage'] = ['status' => '404', 'message' => '테마가 존재하지 않습니다.'];
                 return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
             }
-            
+
             $pageableDto = PageableDto::builder([
                 'currentPageNo' => $request->query('currentPageNo', 1),
                 'recordsPerPage' => $request->query('recordsPerPage', 10),
@@ -62,5 +63,60 @@ class RegionController extends Controller
 
 
         return view('retro.region.list', $data);
+    }
+
+    public function write(Request $request, string $regionTitleEn = null, string $themeTitleEn = null)
+    {
+        $accessToken = $this->getAccessTokenKey();
+        $data = [
+            'themes' => null,
+            'posts' => null,
+            'pagination' => null,
+        ];
+        if (is_null($accessToken)) {
+            return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
+        }
+
+        // themes
+        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
+        if (!$response['success']) {
+            return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
+        }
+
+        $data['themes'] = $response['result'];
+
+        if (!is_null($themeTitleEn)) {
+            $titleEnList = collect($data['themes'])->pluck('titleEn')->toArray();
+            if (!in_array($themeTitleEn, $titleEnList)) {
+                $response['errorMessage'] = ['status' => '404', 'message' => '테마가 존재하지 않습니다.'];
+                return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
+            }
+        }
+
+
+        return view('retro/region/write', $data);
+    }
+
+    public function save(Request $request)
+    {
+        $request->validateWithBag('write', [
+            'title' => ['required'],
+            'content' => [
+                'required',
+            ]
+        ]);
+
+        $accessToken = $request->cookie('accessToken');;
+
+        $postCreateRequestDto = PostCreateRequestDto::builder([
+            'title' => $request->post('title'),
+            'content' => $request->post('content'),
+            'ip' => $request->ip(),
+            'themeId' => $request->post('themeId'),
+            'memberId' => $request->post('memberId')
+        ]);
+
+        $this->postService->savePost($postCreateRequestDto, $accessToken);
+
     }
 }
