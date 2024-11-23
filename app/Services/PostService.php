@@ -20,7 +20,7 @@ class PostService extends BaseService
         parent::__construct();
     }
 
-    public function getThemePosts(string $themeId, string $accessToken, PageableDto $pageableDto)
+    public function getThemePostsByThemeId(string $themeId, string $accessToken, PageableDto $pageableDto)
     {
         $cacheKey = 'theme_posts_' . $themeId . '_' . Arr::join($pageableDto->toArray(), '_');
         $cacheKey = Str::replace(',', '_', $cacheKey);
@@ -30,6 +30,33 @@ class PostService extends BaseService
         }
 
         $url = $this->url . '/api/v1/article/theme/' . $themeId . '/posts';
+
+        $response = Http::withToken($accessToken)
+            ->withQueryParameters($pageableDto->toArray())
+            ->get($url);
+        $errorMessage = $this->isResponseFailed($response);
+
+        if ($errorMessage !== null) {
+            $this->returnData['success'] = false;
+            $this->returnData['errorMessage'] = $errorMessage;
+        }
+
+        $this->returnData['result'] = $response->json('result');
+        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
+
+        return $this->returnData;
+    }
+
+    public function getThemePostsByThemeTitleEn(string $themeTitleEn, string $accessToken, PageableDto $pageableDto)
+    {
+        $cacheKey = 'theme_posts_' . $themeTitleEn . '_' . Arr::join($pageableDto->toArray(), '_');
+        $cacheKey = Str::replace(',', '_', $cacheKey);
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        $url = $this->url . '/api/v1/article/theme/titleEn/' . $themeTitleEn . '/posts';
 
         $response = Http::withToken($accessToken)
             ->withQueryParameters($pageableDto->toArray())

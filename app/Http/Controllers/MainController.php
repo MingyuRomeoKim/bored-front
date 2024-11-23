@@ -19,7 +19,7 @@ class MainController extends Controller
         parent::__construct($postService, $authService, $themeService, $regionService);
     }
 
-    public function index(Request $request, string $regionId = null, string $themeId = null)
+    public function index(Request $request)
     {
         $pageableDto = PageableDto::builder([
             'currentPageNo' => $request->query('currentPageNo', 1),

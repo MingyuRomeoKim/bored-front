@@ -15,3 +15,6 @@
 
 <!-- Modal logout -->
 @include('retro.modals.logout')
+
+<!-- Modal errors -->
+@include('retro.modals.errors')

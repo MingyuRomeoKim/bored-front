@@ -29,8 +29,12 @@ class BaseService
                 $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
             }
 
-            if (json_validate($errorMessage['errorMessage'])) {
+            if (array_key_exists('errorMessage', $errorMessage) && json_validate($errorMessage['errorMessage'])) {
                 $errorMessage = json_decode($errorMessage['errorMessage'], true);
+            }
+
+            if (array_key_exists('error', $errorMessage) && array_key_exists('status ', $errorMessage)) {
+                $errorMessage = ['errorMessage' => $errorMessage['error'], 'errorCode' => $errorMessage['status ']];
             }
         }
         return $errorMessage;

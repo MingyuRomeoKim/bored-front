@@ -8,7 +8,7 @@
                     <ul class=" list-unstyled">
                         @foreach($themes as $key => $theme)
                         <li>
-                            <a class="app-genres" href="/region/{{$theme['regionId']}}/theme/{{$theme['id']}}">
+                            <a class="app-genres" href="/{{request()->segment(1)}}/{{request()->segment(2)}}/theme/{{$theme['titleEn']}}">
                                 {{$theme['title']}}
                             </a>
                         </li>

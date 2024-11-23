@@ -16,7 +16,7 @@ class RegionController extends Controller
         parent::__construct($postService, $authService, $themeService, $regionService);
     }
 
-    public function index(Request $request, string $regionId = null, string $themeId = null)
+    public function index(Request $request, string $regionTitleEn = null, string $themeTitleEn = null)
     {
         $accessToken = $this->getAccessTokenKey();
         $data = [
@@ -29,13 +29,13 @@ class RegionController extends Controller
         }
 
         // themes
-        $response = $this->themeService->getRegionThemes($regionId, $accessToken);
+        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
         if (!$response['success']) {
-            return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
+            return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
         }
         $data['themes'] = $response['result'];
 
-        if (!is_null($themeId)) {
+        if (!is_null($themeTitleEn)) {
             $pageableDto = PageableDto::builder([
                 'currentPageNo' => $request->query('currentPageNo', 1),
                 'recordsPerPage' => $request->query('recordsPerPage', 10),
@@ -43,10 +43,9 @@ class RegionController extends Controller
                 'sort' => $request->query('sort', 'createdAt,desc'),
             ]);
 
-            $response = $this->postService->getThemePosts($themeId, $accessToken, $pageableDto);
-
+            $response = $this->postService->getThemePostsByThemeTitleEn($themeTitleEn, $accessToken, $pageableDto);
             if (!$response['success']) {
-                return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
+                return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
             }
 
             $result = $response['result'];

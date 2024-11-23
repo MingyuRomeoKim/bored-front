@@ -31,7 +31,7 @@
                         <ul class="dropdown-menu" role="menu">
                             @foreach($regions as $key => $region)
                                 <li>
-                                    <a href="/region/{{$region['id']}}">{{$region['title']}}</a>
+                                    <a href="/region/{{$region['titleEn']}}">{{$region['title']}}</a>
                                 </li>
                             @endforeach
                         </ul>
