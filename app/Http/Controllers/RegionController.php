@@ -33,9 +33,16 @@ class RegionController extends Controller
         if (!$response['success']) {
             return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
         }
+
         $data['themes'] = $response['result'];
 
         if (!is_null($themeTitleEn)) {
+            $titleEnList = collect($data['themes'])->pluck('titleEn')->toArray();
+            if (!in_array($themeTitleEn, $titleEnList)) {
+                $response['errorMessage'] = ['status' => '404', 'message' => '테마가 존재하지 않습니다.'];
+                return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
+            }
+            
             $pageableDto = PageableDto::builder([
                 'currentPageNo' => $request->query('currentPageNo', 1),
                 'recordsPerPage' => $request->query('recordsPerPage', 10),
