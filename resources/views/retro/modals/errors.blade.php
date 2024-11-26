@@ -7,30 +7,28 @@
                 <h4 class="modal-title" id="myModalLabel">Error!!</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group
-                    {{ $errors->errors->any() ? ' has-error' : '' }}">
-                    <label for="errorMessage" class="col-md-4 control-label">에러 발생!</label>
-                    <div class="col-md-12">
-                        <input id="errorMessage" type="text" class="form-control" name="errorMessage" disabled>
-                        @foreach($errors->errors->all() as $key => $error)
-                            <span class="help-block">
-                                <strong>{{ $error }}</strong>
-                            </span>
-                        @endforeach
-                    </div>
-                </div>
-
-                @if($errors->login->has('errorMessage'))
+                @if($errors->errors->has('code'))
                     <div class="form-group
-                    {{ $errors->login->has('errorMessage') ? ' has-error' : '' }}">
-                        <label class="col-md-4 control-label">Error !</label>
+                    {{ $errors->errors->has('code') ? ' has-error' : '' }}">
+                        <label class="col-md-4 control-label">에러 코드</label>
+                        <div class="col-md-6">
+                            <span class="help-block">
+                                <strong>{{ $errors->errors->first('code') }}</strong>
+                            </span>
+
+                        </div>
+                    </div>
+                @endif
+
+                @if($errors->errors->has('message'))
+                    <div class="form-group
+                    {{ $errors->errors->has('message') ? ' has-error' : '' }}">
+                        <label class="col-md-4 control-label">에러 메세지</label>
 
                         <div class="col-md-6">
-                                <span class="help-block">
-                                <strong>{{ $errors->login->first('errorCode')}}</strong>
-                                    {{$errors->login->first('errorMessage')}}
-                                </span>
-
+                            <span class="help-block">
+                                <strong>{{ $errors->errors->first('message')}}</strong>
+                            </span>
                         </div>
                     </div>
                 @endif

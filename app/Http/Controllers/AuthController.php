@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BoredTokenException;
 use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\RegionService;
@@ -21,6 +22,7 @@ class AuthController extends Controller
      * 로그인
      * @param Request $request
      * @return RedirectResponse
+     * @throws BoredTokenException
      */
     public function login(Request $request)
     {
@@ -36,11 +38,7 @@ class AuthController extends Controller
         ]);
 
         $response = $this->authService->login($request);
-        $errorMessage = $this->isResponseFailed($response);
-        if ($errorMessage !== null) {
-            return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
-        }
-
+        $this->isResponseFailed($response);
 
         $result = $response->json('result');
         $cookie = cookie('userData', json_encode($result), \env('JWT_EXPIRED_MIN'));
@@ -73,6 +71,7 @@ class AuthController extends Controller
      * 회원가입
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws BoredTokenException
      */
     public function signUp(Request $request): RedirectResponse
     {
@@ -94,11 +93,7 @@ class AuthController extends Controller
         ]);
 
         $response = $this->authService->signUp(request: $request);
-        $errorMessage = $this->isResponseFailed($response);
-        if ($errorMessage !== null) {
-            return redirect()->back()->withErrors($errorMessage, 'signUp')->withInput();
-        }
-
+        $this->isResponseFailed($response);
 
         return redirect()->back()->with('success', '축하드립니다! 회원가입이 완료되었습니다.');
     }

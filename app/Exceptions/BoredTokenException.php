@@ -28,9 +28,13 @@ class BoredTokenException extends Exception
             cookie()->queue(cookie('userData', null, -1));
         }
 
+        if ($errors['code'] == BoredErrorCode::$COMMON_NOT_LOGIN['code']) {
+            return redirect()->back()->withErrors($errors, 'login');
+        }
+
         return redirect()
             ->back()
-            ->withErrors($errors, 'login')
+            ->withErrors($errors, 'errors')
             ->withInput();
     }
 }

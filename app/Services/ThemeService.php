@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Enums\CacheTtlStatus;
+use App\Exceptions\BoredTokenException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -25,6 +27,10 @@ class ThemeService extends BaseService
         return null;
     }
 
+    /**
+     * @throws BoredTokenException
+     * @throws ConnectionException
+     */
     public function getRegionThemesByRegionId(string $regionId, string $accessToken)
     {
         $cacheKey = 'region_themes_' . $regionId;
@@ -35,17 +41,7 @@ class ThemeService extends BaseService
         }
 
         $response = Http::withToken($accessToken)->get($url);
-        $errorMessage = $this->isResponseFailed($response);
-        if ($errorMessage !== null) {
-            $this->returnData['success'] = false;
-            $this->returnData['errorMessage'] = $errorMessage;
-            return $this->returnData;
-        }
-
-        if ($errorMessage !== null) {
-            $this->returnData['success'] = false;
-            $this->returnData['errorMessage'] = $errorMessage;
-        }
+        $this->isResponseFailed($response);
 
         $this->returnData['result'] = $response->json('result');
         Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
@@ -53,6 +49,10 @@ class ThemeService extends BaseService
         return $this->returnData;
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws BoredTokenException
+     */
     public function getRegionThemesByRegionTitleEn(string $regionTitleEn, string $accessToken)
     {
         $cacheKey = 'region_themes_' . $regionTitleEn;
@@ -63,17 +63,7 @@ class ThemeService extends BaseService
         }
 
         $response = Http::withToken($accessToken)->get($url);
-        $errorMessage = $this->isResponseFailed($response);
-        if ($errorMessage !== null) {
-            $this->returnData['success'] = false;
-            $this->returnData['errorMessage'] = $errorMessage;
-            return $this->returnData;
-        }
-
-        if ($errorMessage !== null) {
-            $this->returnData['success'] = false;
-            $this->returnData['errorMessage'] = $errorMessage;
-        }
+        $this->isResponseFailed($response);
 
         $this->returnData['result'] = $response->json('result');
         Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));

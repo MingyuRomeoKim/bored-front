@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\BoredTokenException;
 use Illuminate\Http\Client\Response;
 
 class BaseService
@@ -18,25 +19,14 @@ class BaseService
         $this->url = env('API_URL');
     }
 
-    public function isResponseFailed(Response $response): ?array
+    /**
+     * @throws BoredTokenException
+     */
+    public function isResponseFailed(Response $response): void
     {
-        $errorMessage = null;
-
         if ($response->failed()) {
             $errorMessage = $response->json();
-
-            if ($errorMessage === null) {
-                $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
-            }
-
-            if (array_key_exists('errorMessage', $errorMessage) && json_validate($errorMessage['errorMessage'])) {
-                $errorMessage = json_decode($errorMessage['errorMessage'], true);
-            }
-
-            if (array_key_exists('error', $errorMessage) && array_key_exists('status ', $errorMessage)) {
-                $errorMessage = ['errorMessage' => $errorMessage['error'], 'errorCode' => $errorMessage['status ']];
-            }
+            throw new BoredTokenException($errorMessage['errorMessage'], $errorMessage['errorCode']);
         }
-        return $errorMessage;
     }
 }

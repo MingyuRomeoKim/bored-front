@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\BoredTokenException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -47,15 +49,22 @@ class AuthService extends BaseService
         ]);
     }
 
-    public function checkAccessToken(string $accessToken) : Response
+    /**
+     * @throws ConnectionException
+     * @throws BoredTokenException
+     */
+    public function checkAccessToken(string $accessToken) : void
     {
         $url = $this->url . '/api/v1/auth/check/accessToken';
 
-        return Http::withToken($accessToken)
+        $response = Http::withToken($accessToken)
             ->withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])
             ->get($url);
+
+        $this->isResponseFailed($response);
+
     }
 }

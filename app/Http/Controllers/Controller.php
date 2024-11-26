@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BoredErrorCode;
+use App\Exceptions\BoredTokenException;
 use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\RegionService;
@@ -28,22 +30,12 @@ abstract class Controller
         $this->regionService = $regionService;
     }
 
-    public function isResponseFailed(Response $response): ?array
+    public function isResponseFailed(Response $response): void
     {
-        $errorMessage = null;
-
         if ($response->failed()) {
             $errorMessage = $response->json();
-
-            if ($errorMessage === null) {
-                $errorMessage = ['errorMessage' => $response->reason(), 'errorCode' => $response->status()];
-            }
-
-            if (json_validate($errorMessage['errorMessage'])) {
-                $errorMessage = json_decode($errorMessage['errorMessage'], true);
-            }
+            throw new BoredTokenException($errorMessage['errorMessage'], $errorMessage['errorCode']);
         }
-        return $errorMessage;
     }
 
     public function getUserData(): ?array
@@ -51,8 +43,17 @@ abstract class Controller
         return json_decode(request()->cookie('userData'), true) ?? null;
     }
 
+    /**
+     * @throws BoredTokenException
+     */
     public function getAccessTokenKey(): ?string
     {
-        return $this->getUserData()['accessToken'] ?? null;
+        $accessToken = $this->getUserData()['accessToken'] ?? null;
+
+        if (is_null($accessToken)) {
+            return throw new BoredTokenException(BoredErrorCode::$COMMON_NOT_LOGIN['message'], BoredErrorCode::$COMMON_NOT_LOGIN['code']);
+        }
+
+        return $accessToken;
     }
 }

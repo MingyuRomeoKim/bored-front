@@ -40,15 +40,15 @@
                         </div>
                     </div>
 
-                    @if($errors->login->has('errorMessage'))
+                    @if($errors->login->has('message'))
                     <div class="form-group
-                    {{ $errors->login->has('errorMessage') ? ' has-error' : '' }}">
+                    {{ $errors->login->has('message') ? ' has-error' : '' }}">
                         <label class="col-md-4 control-label">Error !</label>
 
                         <div class="col-md-6">
                                 <span class="help-block">
-                                <strong>{{ $errors->login->first('errorCode')}}</strong>
-                                    {{$errors->login->first('errorMessage')}}
+                                <strong>{{ $errors->login->first('code')}}</strong>
+                                    {{$errors->login->first('message')}}
                                 </span>
 
                         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Dtos\Requests\PageableDto;
 use App\Dtos\Requests\PostCreateRequestDto;
+use App\Exceptions\BoredTokenException;
 use App\Services\AuthService;
 use App\Services\BoardService;
 use App\Services\PostService;
@@ -44,21 +45,17 @@ class MainController extends Controller
         ));
     }
 
+    /**
+     * @throws BoredTokenException
+     */
     public function show(string $articleId, Request $request)
     {
         $accessToken = $this->getAccessTokenKey();
 
-        if (is_null($accessToken)) {
-            return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
-        }
-
-        $response = $this->authService->checkAccessToken($accessToken);
-        $errorMessage = $this->isResponseFailed($response);
-        if ($errorMessage !== null) {
-            return redirect()->back()->withErrors($errorMessage, 'login')->withInput();
-        }
+        $this->authService->checkAccessToken($accessToken);
 
         $response = $this->postService->getDetail($articleId, $accessToken);
+
         if (!$response['success']) {
             return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
         }
