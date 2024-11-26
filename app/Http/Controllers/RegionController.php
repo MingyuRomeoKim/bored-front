@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Dtos\Requests\PageableDto;
 use App\Dtos\Requests\PostCreateRequestDto;
+use App\Exceptions\BoredTokenException;
 use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\RegionService;
 use App\Services\ThemeService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
@@ -17,25 +19,20 @@ class RegionController extends Controller
         parent::__construct($postService, $authService, $themeService, $regionService);
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws BoredTokenException
+     */
     public function index(Request $request, string $regionTitleEn = null, string $themeTitleEn = null)
     {
         $accessToken = $this->getAccessTokenKey();
         $data = [
-            'themes' => null,
             'posts' => null,
             'pagination' => null,
         ];
-        if (is_null($accessToken)) {
-            return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
-        }
 
         // themes
-        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
-        if (!$response['success']) {
-            return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
-        }
-
-        $data['themes'] = $response['result'];
+        $data['themes'] = $this->fetchThemes($regionTitleEn, $accessToken);
 
         if (!is_null($themeTitleEn)) {
             $titleEnList = collect($data['themes'])->pluck('titleEn')->toArray();
@@ -65,25 +62,20 @@ class RegionController extends Controller
         return view('retro.region.list', $data);
     }
 
+    /**
+     * @throws BoredTokenException
+     * @throws ConnectionException
+     */
     public function write(Request $request, string $regionTitleEn = null, string $themeTitleEn = null)
     {
         $accessToken = $this->getAccessTokenKey();
         $data = [
-            'themes' => null,
             'posts' => null,
             'pagination' => null,
         ];
-        if (is_null($accessToken)) {
-            return redirect()->back()->withErrors(['errorMessage' => '로그인이 필요합니다.'], 'login')->withInput();
-        }
 
         // themes
-        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
-        if (!$response['success']) {
-            return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
-        }
-
-        $data['themes'] = $response['result'];
+        $data['themes'] = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
 
         if (!is_null($themeTitleEn)) {
             $titleEnList = collect($data['themes'])->pluck('titleEn')->toArray();
@@ -97,6 +89,10 @@ class RegionController extends Controller
         return view('retro/region/write', $data);
     }
 
+    /**
+     * @param Request $request
+     * @return void
+     */
     public function save(Request $request)
     {
         $request->validateWithBag('write', [
@@ -119,4 +115,15 @@ class RegionController extends Controller
         $this->postService->savePost($postCreateRequestDto, $accessToken);
 
     }
+
+    /**
+     * Fetch themes for the given region.
+     */
+    private function fetchThemes(string $regionTitleEn, string $accessToken): array
+    {
+        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
+
+        return $response['result'];
+    }
+
 }
