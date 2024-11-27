@@ -20,6 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        view()->composer('retro.layouts.app', GlobalViewVariablesComposer::class);
+        view()->composer('retro.*', GlobalViewVariablesComposer::class);
     }
 }

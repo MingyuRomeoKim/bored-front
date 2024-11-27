@@ -3,25 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Dtos\Requests\PageableDto;
-use App\Dtos\Requests\PostCreateRequestDto;
 use App\Exceptions\BoredTokenException;
 use App\Services\AuthService;
-use App\Services\BoardService;
 use App\Services\PostService;
 use App\Services\RegionService;
 use App\Services\ThemeService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-
     public function __construct(PostService $postService, AuthService $authService, ThemeService $themeService, RegionService $regionService)
     {
         parent::__construct($postService, $authService, $themeService, $regionService);
     }
 
-    public function index(Request $request)
+    /**
+     * @throws ConnectionException
+     * @throws BoredTokenException
+     */
+    public function index(Request $request): \Illuminate\View\View
     {
+
         $pageableDto = PageableDto::builder([
             'currentPageNo' => $request->query('currentPageNo', 1),
             'recordsPerPage' => $request->query('recordsPerPage', 10),
@@ -31,15 +34,11 @@ class MainController extends Controller
 
         $response = $this->postService->getLists($pageableDto);
 
-        if (!$response['success']) {
-            return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
-        }
-
         $result = $response['result'];
         $posts = $result['items'];
         $pagination = $result['paginationInfo'];
 
-        return view('retro/index', compact(
+        return view('retro.index', compact(
             'posts',
             'pagination'
         ));
@@ -47,8 +46,9 @@ class MainController extends Controller
 
     /**
      * @throws BoredTokenException
+     * @throws ConnectionException
      */
-    public function show(string $articleId, Request $request)
+    public function show(string $articleId, Request $request): \Illuminate\View\View
     {
         $accessToken = $this->getAccessTokenKey();
 
@@ -56,9 +56,6 @@ class MainController extends Controller
 
         $response = $this->postService->getDetail($articleId, $accessToken);
 
-        if (!$response['success']) {
-            return redirect()->back()->withErrors($response['errorMessage'], 'login')->withInput();
-        }
         $post = $response['result'];
 
         return view('retro/show', compact(

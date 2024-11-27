@@ -5,7 +5,69 @@
 @section('content')
     <div class="container">
         <div class="row col-sm-12">
-            @include('retro.layouts.posts')
+            <div class=" page-content col-thin-left bordered">
+                <div class="category-">
+                    <h1>Regions</h1>
+                </div>
+                <div class="adds-wrapper">
+                    @foreach($regions as $key => $region)
+                        <a class="app-line" onclick="ga('send', 'event', 'appslist', 'goSite');"
+                           href="/region/<?=$region['titleEn']?>">
+                            <div class="item-list row">
+
+                                <div class="col-sm-1 " style="width: 40px;">
+                                    <div class="add-image app-icon">
+                                        <img class=" no-margin app-icon-pixelated"
+                                             src="https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?url=http://is2.mzstatic.com/image/thumb/Purple2/v4/b0/c1/9e/b0c19eb5-e576-f668-fa81-bd08c16d874e/mzl.qucuygly.png/100x100bb-85.jpg&container=focus&resize_w=15&resize_h=15&refresh=2592000"
+                                             alt="img">
+                                    </div>
+                                </div>
+                                <!--/.photobox-->
+                                <div class="col-sm-2 right-border">
+                                        <?= $region['title'] ?>
+                                </div>
+
+                                <div class="col-sm-7 right-border">
+                                        <?= $region['description'] ?>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class=" page-content col-thin-left bordered">
+                <div class="category-">
+                    <h1>카테고리</h1>
+                </div>
+                <div class="adds-wrapper">
+                    @foreach($themes as $key => $theme)
+                        <a class="app-line" onclick="ga('send', 'event', 'appslist', 'goSite');"
+                           href="/region/<?=$theme['titleEn']?>">
+                            <div class="item-list row">
+
+                                <div class="col-sm-1 " style="width: 40px;">
+                                    <div class="add-image app-icon">
+                                        <img class=" no-margin app-icon-pixelated"
+                                             src="https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?url=http://is2.mzstatic.com/image/thumb/Purple2/v4/b0/c1/9e/b0c19eb5-e576-f668-fa81-bd08c16d874e/mzl.qucuygly.png/100x100bb-85.jpg&container=focus&resize_w=15&resize_h=15&refresh=2592000"
+                                             alt="img">
+                                    </div>
+                                </div>
+                                <!--/.photobox-->
+                                <div class="col-sm-2 right-border">
+                                        <?= $theme['title'] ?>
+                                </div>
+
+                                <div class="col-sm-7 right-border">
+                                        <?= $theme['description'] ?>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 @endsection

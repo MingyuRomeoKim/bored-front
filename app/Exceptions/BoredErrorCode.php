@@ -30,7 +30,7 @@ class BoredErrorCode
     ];
 
     public static array $JWT_INVALID = [
-        'code' => 1001,
+        'code' => 10011,
         'message' => 'JWT 토큰이 유효하지 않음',
     ];
 }
