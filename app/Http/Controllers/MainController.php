@@ -26,23 +26,4 @@ class MainController extends Controller
     {
         return view('retro.index');
     }
-
-    /**
-     * @throws BoredTokenException
-     * @throws ConnectionException
-     */
-    public function show(string $articleId, Request $request): \Illuminate\View\View
-    {
-        $accessToken = $this->getAccessTokenKey();
-
-        $this->authService->checkAccessToken($accessToken);
-
-        $response = $this->postService->getDetail($articleId, $accessToken);
-
-        $post = $response['result'];
-
-        return view('retro/show', compact(
-            'post'
-        ));
-    }
 }

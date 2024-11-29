@@ -54,7 +54,7 @@ class PostService extends BaseService
      * @throws BoredTokenException
      * @throws ConnectionException
      */
-    public function getThemePostsByThemeTitleEn(string $themeTitleEn, string $accessToken, PageableDto $pageableDto)
+    public function getThemePostsByThemeTitleEn(string $themeTitleEn, PageableDto $pageableDto)
     {
         $cacheKey = 'theme_posts_' . $themeTitleEn . '_' . Arr::join($pageableDto->toArray(), '_');
         $cacheKey = Str::replace(',', '_', $cacheKey);
@@ -65,8 +65,7 @@ class PostService extends BaseService
 
         $url = $this->url . '/api/v1/article/theme/titleEn/' . $themeTitleEn . '/posts';
 
-        $response = Http::withToken($accessToken)
-            ->withQueryParameters($pageableDto->toArray())
+        $response = Http::withQueryParameters($pageableDto->toArray())
             ->get($url);
         $this->isResponseFailed($response);
 
@@ -104,15 +103,15 @@ class PostService extends BaseService
      * @throws BoredTokenException
      * @throws ConnectionException
      */
-    public function getDetail(string $postId, string $accessToken): array
+    public function getDetail(string $postId): array
     {
         $cacheKey = 'post_' . $postId;
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
+//        if (Cache::has($cacheKey)) {
+//            return Cache::get($cacheKey);
+//        }
 
         $url = $this->url . '/api/v1/article/post/detail/' . $postId;
-        $response = Http::withToken($accessToken)->get($url);
+        $response = Http::get($url);
         $this->isResponseFailed($response);
 
         $this->returnData['result'] = $response->json('result');

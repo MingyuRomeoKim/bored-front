@@ -75,7 +75,7 @@ class ThemeService extends BaseService
      * @throws ConnectionException
      * @throws BoredTokenException
      */
-    public function getRegionThemesByRegionTitleEn(string $regionTitleEn, string $accessToken)
+    public function getRegionThemesByRegionTitleEn(string $regionTitleEn)
     {
         $cacheKey = 'region_themes_' . $regionTitleEn;
         $url = $this->url . "/api/v1/article/region/titleEn/{$regionTitleEn}/themes";
@@ -84,7 +84,7 @@ class ThemeService extends BaseService
             return Cache::get($cacheKey);
         }
 
-        $response = Http::withToken($accessToken)->get($url);
+        $response = Http::get($url);
         $this->isResponseFailed($response);
 
         $this->returnData['result'] = $response->json('result');

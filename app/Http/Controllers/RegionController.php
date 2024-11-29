@@ -25,14 +25,14 @@ class RegionController extends Controller
      */
     public function index(Request $request, string $regionTitleEn = null, string $themeTitleEn = null)
     {
-        $accessToken = $this->getAccessTokenKey();
+
         $data = [
             'posts' => null,
             'pagination' => null,
         ];
 
         // themes
-        $data['themes'] = $this->fetchThemes($regionTitleEn, $accessToken);
+        $data['themes'] = $this->fetchThemes($regionTitleEn);
 
         if (!is_null($themeTitleEn)) {
             $titleEnList = collect($data['themes'])->pluck('titleEn')->toArray();
@@ -48,7 +48,7 @@ class RegionController extends Controller
                 'sort' => $request->query('sort', 'createdAt,desc'),
             ]);
 
-            $response = $this->postService->getThemePostsByThemeTitleEn($themeTitleEn, $accessToken, $pageableDto);
+            $response = $this->postService->getThemePostsByThemeTitleEn($themeTitleEn, $pageableDto);
             if (!$response['success']) {
                 return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
             }
@@ -123,11 +123,26 @@ class RegionController extends Controller
     }
 
     /**
+     * @throws BoredTokenException
+     * @throws ConnectionException
+     */
+    public function show(string $regionTitleEn, string $themeTitleEn, string $postId): \Illuminate\View\View
+    {
+        $response = $this->postService->getDetail($postId);
+
+        $post = $response['result'];
+
+        return view('retro/show', compact(
+            'post'
+        ));
+    }
+
+    /**
      * Fetch themes for the given region.
      */
-    private function fetchThemes(string $regionTitleEn, string $accessToken): array
+    private function fetchThemes(string $regionTitleEn): array
     {
-        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
+        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
 
         return $response['result'];
     }
