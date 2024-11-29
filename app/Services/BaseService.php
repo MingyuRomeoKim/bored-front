@@ -26,7 +26,6 @@ class BaseService
     {
         if ($response->failed()) {
             $errorMessage = $response->json();
-            dd($errorMessage);
             throw new BoredTokenException($errorMessage['errorMessage'], $errorMessage['errorCode']);
         }
     }
