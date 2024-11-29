@@ -10,8 +10,8 @@ Route::get('/', [MainController::class, 'index']);
 Route::get('/article/{articleId}',[MainController::class, 'show']);
 
 Route::prefix('region')->group(function (){
-    Route::get('/{regionTitleEn}', [RegionController::class, 'index']);
-    Route::get('/{regionTitleEn}/theme/{themeTitleEn}', [RegionController::class, 'index']);
+    Route::get('/{regionTitleEn}', [RegionController::class, 'index'])->name('region.index');
+    Route::get('/{regionTitleEn}/theme/{themeTitleEn}', [RegionController::class, 'index'])->name('region.theme.index');
     Route::get('/{regionTitleEn}/theme/{themeTitleEn}/write',[RegionController::class, 'write']);
     Route::post('/{regionTitleEn}/theme/{themeTitleEn}/write',[RegionController::class, 'save']);
 });

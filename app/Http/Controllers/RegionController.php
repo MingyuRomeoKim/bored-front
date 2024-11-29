@@ -66,7 +66,7 @@ class RegionController extends Controller
      * @throws BoredTokenException
      * @throws ConnectionException
      */
-    public function write(Request $request, string $regionTitleEn = null, string $themeTitleEn = null)
+    public function write(string $regionTitleEn = null, string $themeTitleEn = null)
     {
         $accessToken = $this->getAccessTokenKey();
         $data = [
@@ -85,15 +85,17 @@ class RegionController extends Controller
                 return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
             }
         }
-        return view('retro/region/write', $data);
+        return view('retro.region.write', $data);
 
     }
 
     /**
      * @param Request $request
-     * @return void
+     * @param string|null $regionTitleEn
+     * @param string|null $themeTitleEn
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function save(Request $request)
+    public function save(Request $request, string $regionTitleEn = null, string $themeTitleEn = null)
     {
         $request->validateWithBag('write', [
             'title' => ['required'],
@@ -102,18 +104,22 @@ class RegionController extends Controller
             ]
         ]);
 
-        $accessToken = $request->cookie('accessToken');;
+        $accessToken = $this->getAccessTokenKey();
+
+        $themeResponse = $this->themeService->findByTitleEn($themeTitleEn, $accessToken);
+        $theme = $themeResponse['result'];
 
         $postCreateRequestDto = PostCreateRequestDto::builder([
             'title' => $request->post('title'),
             'content' => $request->post('content'),
             'ip' => $request->ip(),
-            'themeId' => $request->post('themeId'),
-            'memberId' => $request->post('memberId')
+            'themeId' => $theme['id'],
+            'memberId' => $this->getUserData()['id'],
         ]);
 
         $this->postService->savePost($postCreateRequestDto, $accessToken);
 
+        return redirect()->route('region.theme.index', ['regionTitleEn' => $regionTitleEn, 'themeTitleEn' => $themeTitleEn]);
     }
 
     /**

@@ -28,6 +28,28 @@ class ThemeService extends BaseService
     }
 
     /**
+     * @throws ConnectionException
+     * @throws BoredTokenException
+     */
+    public function findByTitleEn(String $titleEn, $accessToken)
+    {
+        $cacheKey = 'theme_detail_titleEn_' . $titleEn;
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        $url = $this->url . '/api/v1/article/theme/detail/' . $titleEn;
+
+        $response = Http::withToken($accessToken)->get($url);
+        $this->isResponseFailed($response);
+
+        $this->returnData['result'] = $response->json('result');
+        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
+
+        return $this->returnData;
+    }
+
+    /**
      * @throws BoredTokenException
      * @throws ConnectionException
      */

@@ -14,7 +14,7 @@
                 <h5 class="list-title">
                     <strong>글쓰기</strong>
                 </h5>
-                <form class="form-horizontal" role="form" method="POST" action="{{ url('write') }}">
+                <form class="form-horizontal" role="form" method="POST" action="{{ url()->current() }}">
                     {{ csrf_field() }}
                     
                     <div class="form-group

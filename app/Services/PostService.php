@@ -122,13 +122,20 @@ class PostService extends BaseService
     }
 
 
+    /**
+     * @throws BoredTokenException
+     * @throws ConnectionException
+     */
     public function savePost(PostCreateRequestDto $postCreateRequestDto, string $accessToken)
     {
         $url = $this->url . '/api/v1/article/post/create';
 
         $response = Http::withToken($accessToken)
-            ->post($url, $postCreateRequestDto);
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->post($url, $postCreateRequestDto->toArray());
 
+        $this->isResponseFailed($response);
 
+        return $response->json('result');
     }
 }
