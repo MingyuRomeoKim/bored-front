@@ -7,7 +7,7 @@
                         <h5 class="list-title"><strong>카테고리</strong></h5>
                         <ul class=" list-unstyled">
                             @foreach($themes as $key => $theme)
-                                <li>
+                                <li class="{{$theme['titleEn'] == request()->segment((4)) ? "chooseLi" : ""}}">
                                     <a class="app-genres"
                                        href="/{{request()->segment(1)}}/{{request()->segment(2)}}/theme/{{$theme['titleEn']}}">
                                         {{$theme['title']}}

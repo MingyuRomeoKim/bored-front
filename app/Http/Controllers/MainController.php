@@ -24,24 +24,7 @@ class MainController extends Controller
      */
     public function index(Request $request): \Illuminate\View\View
     {
-
-        $pageableDto = PageableDto::builder([
-            'currentPageNo' => $request->query('currentPageNo', 1),
-            'recordsPerPage' => $request->query('recordsPerPage', 10),
-            'pageSize' => $request->query('pageSize', 10),
-            'sort' => $request->query('sort', 'createdAt,desc'),
-        ]);
-
-        $response = $this->postService->getLists($pageableDto);
-
-        $result = $response['result'];
-        $posts = $result['items'];
-        $pagination = $result['paginationInfo'];
-
-        return view('retro.index', compact(
-            'posts',
-            'pagination'
-        ));
+        return view('retro.index');
     }
 
     /**

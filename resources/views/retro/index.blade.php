@@ -38,8 +38,5 @@
                 </div>
             </div>
         @endforeach
-        <div class="row col-sm-12">
-            @include('retro.layouts.posts')
-        </div>
     </div>
 @endsection
