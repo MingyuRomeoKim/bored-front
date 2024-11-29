@@ -75,7 +75,8 @@ class RegionController extends Controller
         ];
 
         // themes
-        $data['themes'] = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
+        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
+        $data['themes'] = $response['result'];
 
         if (!is_null($themeTitleEn)) {
             $titleEnList = collect($data['themes'])->pluck('titleEn')->toArray();
@@ -84,9 +85,8 @@ class RegionController extends Controller
                 return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
             }
         }
-
-
         return view('retro/region/write', $data);
+
     }
 
     /**
