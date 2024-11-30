@@ -8,18 +8,21 @@ use App\Enums\CacheTtlStatus;
 use App\Exceptions\BoredTokenException;
 use App\Models\Post;
 use App\Repositories\PostRepository;
+use App\Utils\CacheUtil;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Str;
 
 class PostService extends BaseService
 {
-    public function __construct()
+    private CacheUtil $cacheUtil;
+
+    public function __construct(CacheUtil $cacheUtil)
     {
         parent::__construct();
+        $this->cacheUtil = $cacheUtil;
     }
 
     /**
@@ -110,6 +113,8 @@ class PostService extends BaseService
             ->post($url, $postCreateRequestDto->toArray());
 
         $this->isResponseFailed($response);
+
+        $this->cacheUtil->clearCacheByPattern('posts');
 
         return $response->json('result');
     }

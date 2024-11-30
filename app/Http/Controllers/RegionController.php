@@ -9,15 +9,19 @@ use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\RegionService;
 use App\Services\ThemeService;
+use App\Utils\CacheUtil;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
 {
-    public function __construct(PostService $postService, AuthService $authService, ThemeService $themeService, RegionService $regionService)
+    private CacheUtil $cacheUtil;
+    public function __construct(PostService $postService, AuthService $authService, ThemeService $themeService, RegionService $regionService, CacheUtil $cacheUtil)
     {
         parent::__construct($postService, $authService, $themeService, $regionService);
+        $this->cacheUtil = $cacheUtil;
     }
+
 
     /**
      * @throws ConnectionException
