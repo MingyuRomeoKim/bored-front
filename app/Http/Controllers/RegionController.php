@@ -48,12 +48,8 @@ class RegionController extends Controller
                 'sort' => $request->query('sort', 'createdAt,desc'),
             ]);
 
-            $response = $this->postService->getThemePostsByThemeTitleEn($themeTitleEn, $pageableDto);
-            if (!$response['success']) {
-                return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
-            }
+            $result = $this->postService->getThemePostsByThemeTitleEn($themeTitleEn, $pageableDto);
 
-            $result = $response['result'];
             $data['posts'] = $result['items'];
             $data['pagination'] = $result['paginationInfo'];
         }
@@ -75,9 +71,7 @@ class RegionController extends Controller
             'pagination' => null,
         ];
 
-        // themes
-        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
-        $data['themes'] = $response['result'];
+        $data['themes'] = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
 
         if (!is_null($themeTitleEn)) {
             $titleEnList = collect($data['themes'])->pluck('titleEn')->toArray();
@@ -86,8 +80,8 @@ class RegionController extends Controller
                 return redirect()->back()->withErrors($response['errorMessage'], 'errors')->withInput();
             }
         }
-        return view('retro.region.write', $data);
 
+        return view('retro.region.write', $data);
     }
 
     /**
@@ -107,8 +101,7 @@ class RegionController extends Controller
 
         $accessToken = $this->getAccessTokenKey();
 
-        $themeResponse = $this->themeService->findByTitleEn($themeTitleEn, $accessToken);
-        $theme = $themeResponse['result'];
+        $theme = $this->themeService->findByTitleEn($themeTitleEn, $accessToken);
 
         $postCreateRequestDto = PostCreateRequestDto::builder([
             'title' => $request->post('title'),
@@ -129,13 +122,8 @@ class RegionController extends Controller
      */
     public function show(string $regionTitleEn, string $themeTitleEn, string $postId): \Illuminate\View\View
     {
-        // themes
-        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
-        $data['themes'] = $response['result'];
-
-        $response = $this->postService->getDetail($postId);
-
-        $data['post'] = $response['result'];
+        $data['themes'] = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
+        $data['post'] = $this->postService->getDetail($postId);
 
         return view('retro/show', $data);
     }
@@ -145,9 +133,7 @@ class RegionController extends Controller
      */
     private function fetchThemes(string $regionTitleEn): array
     {
-        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
-
-        return $response['result'];
+        return $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
     }
 
 }

@@ -30,24 +30,16 @@ class PostService extends BaseService
     {
         $cacheKey = 'theme_posts_' . $themeId . '_' . Arr::join($pageableDto->toArray(), '_');
         $cacheKey = Str::replace(',', '_', $cacheKey);
-
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
-
         $url = $this->url . '/api/v1/article/theme/' . $themeId . '/posts';
 
-        $response = Http::withToken($accessToken)
-            ->withQueryParameters($pageableDto->toArray())
-            ->get($url);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $accessToken, $pageableDto) {
+            $response = Http::withToken($accessToken)
+                ->withQueryParameters($pageableDto->toArray())
+                ->get($url);
+            $this->isResponseFailed($response);
 
-        $this->isResponseFailed($response);
-
-
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
-
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 
     /**
@@ -58,21 +50,15 @@ class PostService extends BaseService
     {
         $cacheKey = 'theme_posts_' . $themeTitleEn . '_' . Arr::join($pageableDto->toArray(), '_');
         $cacheKey = Str::replace(',', '_', $cacheKey);
-
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
-
         $url = $this->url . '/api/v1/article/theme/titleEn/' . $themeTitleEn . '/posts';
 
-        $response = Http::withQueryParameters($pageableDto->toArray())
-            ->get($url);
-        $this->isResponseFailed($response);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $pageableDto) {
+            $response = Http::withQueryParameters($pageableDto->toArray())
+                ->get($url);
+            $this->isResponseFailed($response);
 
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
-
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 
     /**
@@ -83,20 +69,14 @@ class PostService extends BaseService
     {
         $cacheKey = 'posts_' . Arr::join($pageableDto->toArray(), '_');
         $cacheKey = Str::replace(',', '_', $cacheKey);
-
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
-
         $url = $this->url . '/api/v1/article/post/lists';
 
-        $response = Http::withQueryParameters($pageableDto->toArray())->get($url);
-        $this->isResponseFailed($response);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $pageableDto) {
+            $response = Http::withQueryParameters($pageableDto->toArray())->get($url);
+            $this->isResponseFailed($response);
 
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
-
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 
     /**
@@ -106,18 +86,14 @@ class PostService extends BaseService
     public function getDetail(string $postId): array
     {
         $cacheKey = 'post_' . $postId;
-//        if (Cache::has($cacheKey)) {
-//            return Cache::get($cacheKey);
-//        }
-
         $url = $this->url . '/api/v1/article/post/detail/' . $postId;
-        $response = Http::get($url);
-        $this->isResponseFailed($response);
 
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
+            $this->isResponseFailed($response);
 
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 
 

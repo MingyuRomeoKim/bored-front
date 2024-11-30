@@ -7,6 +7,7 @@ use App\Exceptions\BoredTokenException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 
 class ThemeService extends BaseService
 {
@@ -16,15 +17,15 @@ class ThemeService extends BaseService
     }
 
     public function getThemes() {
+        $cacheKey = 'theme_lists';
         $url = $this->url . '/api/v1/article/theme/lists';;
 
-        $response = Http::get($url);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
+            $this->isResponseFailed($response);
 
-        if ($response->status() == 200) {
             return $response->json('result');
-        }
-
-        return null;
+        });
     }
 
     /**
@@ -34,19 +35,14 @@ class ThemeService extends BaseService
     public function findByTitleEn(String $titleEn, $accessToken)
     {
         $cacheKey = 'theme_detail_titleEn_' . $titleEn;
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
-
         $url = $this->url . '/api/v1/article/theme/detail/' . $titleEn;
 
-        $response = Http::withToken($accessToken)->get($url);
-        $this->isResponseFailed($response);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $accessToken) {
+            $response = Http::withToken($accessToken)->get($url);
+            $this->isResponseFailed($response);
 
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
-
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 
     /**
@@ -58,17 +54,12 @@ class ThemeService extends BaseService
         $cacheKey = 'region_themes_' . $regionId;
         $url = $this->url . "/api/v1/article/region/{$regionId}/themes";
 
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $accessToken) {
+            $response = Http::withToken($accessToken)->get($url);
+            $this->isResponseFailed($response);
 
-        $response = Http::withToken($accessToken)->get($url);
-        $this->isResponseFailed($response);
-
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
-
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 
     /**
@@ -80,16 +71,11 @@ class ThemeService extends BaseService
         $cacheKey = 'region_themes_' . $regionTitleEn;
         $url = $this->url . "/api/v1/article/region/titleEn/{$regionTitleEn}/themes";
 
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
+            $this->isResponseFailed($response);
 
-        $response = Http::get($url);
-        $this->isResponseFailed($response);
-
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
-
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 }

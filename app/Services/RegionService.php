@@ -17,15 +17,15 @@ class RegionService extends BaseService
 
     public function getRegions()
     {
+        $cacheKey = 'region_lists';
         $url = $this->url . '/api/v1/article/region/lists';
 
-        $response = Http::get($url);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
+            $this->isResponseFailed($response);
 
-        if ($response->status() == 200) {
             return $response->json('result');
-        }
-
-        return null;
+        });
     }
 
     /**
@@ -35,18 +35,13 @@ class RegionService extends BaseService
     public function findByTitleEn(String $titleEn, $accessToken)
     {
         $cacheKey = 'region_detail_titleEn_' . $titleEn;
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
-
         $url = $this->url . '/api/v1/article/region/detail/' . $titleEn;
 
-        $response = Http::withToken($accessToken)->get($url);
-        $this->isResponseFailed($response);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $accessToken) {
+            $response = Http::withToken($accessToken)->get($url);
+            $this->isResponseFailed($response);
 
-        $this->returnData['result'] = $response->json('result');
-        Cache::put($cacheKey, $this->returnData, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM));
-
-        return $this->returnData;
+            return $response->json('result');
+        });
     }
 }
