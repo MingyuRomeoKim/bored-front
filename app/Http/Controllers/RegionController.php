@@ -69,13 +69,14 @@ class RegionController extends Controller
     public function write(string $regionTitleEn = null, string $themeTitleEn = null)
     {
         $accessToken = $this->getAccessTokenKey();
+
         $data = [
             'posts' => null,
             'pagination' => null,
         ];
 
         // themes
-        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn, $accessToken);
+        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
         $data['themes'] = $response['result'];
 
         if (!is_null($themeTitleEn)) {
@@ -128,13 +129,15 @@ class RegionController extends Controller
      */
     public function show(string $regionTitleEn, string $themeTitleEn, string $postId): \Illuminate\View\View
     {
+        // themes
+        $response = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
+        $data['themes'] = $response['result'];
+
         $response = $this->postService->getDetail($postId);
 
-        $post = $response['result'];
+        $data['post'] = $response['result'];
 
-        return view('retro/show', compact(
-            'post'
-        ));
+        return view('retro/show', $data);
     }
 
     /**
