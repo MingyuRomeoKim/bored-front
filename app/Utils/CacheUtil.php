@@ -17,5 +17,11 @@ class CacheUtil
             $connection->del($key);
         }
     }
+
+    // 캐시 생성
+    public static function putCache($key, $value, $ttl)
+    {
+        Redis::connection('cache')->set($key, $value, 'EX', $ttl);
+    }
 }
 
