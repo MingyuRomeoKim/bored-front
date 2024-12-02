@@ -123,6 +123,37 @@
                         </div>
                     </div>
 
+                    <!-- 개인정보 제공 동의 -->
+                    <div class="form-group
+                    {{ $errors->signUp->has('agree') ? ' has-error' : '' }}">
+                        <label for="agree" class="col-md-4 control-label">(필수)개인정보 수집/이용 동의</label>
+
+                        <div class="col-md-1">
+                            <input id="agree" type="checkbox" class="form-control" name="agree"
+                                   value="1" {{ old('agree') ? 'checked' : '' }} required>
+                            @if ($errors->signUp->has('agree'))
+                                <span class="help-block
+                                {{ $errors->signUp->has('agree') ? ' has-error' : '' }}">
+                                <strong>{{ $errors->signUp->first('agree') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <label for="adAgree" class="col-md-4 control-label">(선택) 광고성 정보 수신 동의</label>
+
+                        <div class="col-md-1">
+                            <input id="adAgree" type="checkbox" class="form-control" name="adAgree"
+                                   value="{{old('adAgree')}}">
+                            @if ($errors->signUp->has('adAgree'))
+                                <span class="help-block
+                                {{ $errors->signUp->has('adAgree') ? ' has-error' : '' }}">
+                                <strong>{{ $errors->signUp->first('adAgree') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+
                     <div class="modal-footer m-3">
                         <button type="submit" class="btn btn-primary"> SignUp</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

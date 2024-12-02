@@ -26,4 +26,9 @@ class MainController extends Controller
     {
         return view('retro.index');
     }
+
+    public function policy()
+    {
+        return view('retro.policy');
+    }
 }

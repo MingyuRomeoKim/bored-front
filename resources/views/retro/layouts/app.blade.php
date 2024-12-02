@@ -107,12 +107,15 @@
         <nav class="navbar navbar-default navbar-fixed-bottom ">
             <div class="container">
                 <div class="navbar">
-                    <a class="nav navbar-left" href="#" data-toggle="modal" data-target="#aboutModal"><span style="color: #fefe54">A</span>bout
-                        Developer</a>
-
+                    <a class="nav navbar-left" href="#" data-toggle="modal" data-target="#aboutModal">
+                        <span style="color: #fefe54">A</span>bout Developer
+                    </a>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="/notice/policy">개인정보처리방침</a>
 
                     <a class="nav navbar-right" href="https://bored.co.kr"> &copy; <strike>1970</strike> 2024 Bored.co.kr</a>
                 </div>
+
             </div>
         </nav>
         <!-- /.footer -->

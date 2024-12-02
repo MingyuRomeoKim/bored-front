@@ -90,6 +90,7 @@ class AuthController extends Controller
             'regionId' => 'required|string',
             'phone' => 'required|string|regex:/^01[0-9]{8,9}$/',
             'address' => 'required|string',
+            'agree' => 'required|accepted'
         ]);
 
         $response = $this->authService->signUp(request: $request);
