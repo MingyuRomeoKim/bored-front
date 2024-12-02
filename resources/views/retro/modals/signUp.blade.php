@@ -17,7 +17,7 @@
 
                         <div class="col-md-6">
                             <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}"
-                                   required autofocus>
+                                  placeholder="홍길동" required autofocus>
                             @if ($errors->signUp->has('name'))
                                 <span class="help-block">
                                 <strong>{{ $errors->signUp->first('name') }}</strong>
@@ -32,7 +32,7 @@
 
                         <div class="col-md-6">
                             <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}"
-                                   required autofocus>
+                                   placeholder="user@bored.co.kr" required autofocus>
                             @if ($errors->signUp->has('email'))
                                 <span class="help-block">
                                 <strong>{{ $errors->signUp->first('email') }}</strong>
@@ -99,7 +99,7 @@
 
                         <div class="col-md-6">
                             <input id="phone" type="text" class="form-control" name="phone" value="{{old('phone')}}"
-                                   required>
+                                   placeholder="010-1234-5678" required>
                             @if ($errors->signUp->has('phone'))
                                 <span class="help-block">
                                 <strong>{{ $errors->signUp->first('phone') }}</strong>
@@ -114,6 +114,7 @@
 
                         <div class="col-md-6">
                             <input id="address" type="text" class="form-control" name="address"
+                                   placeholder="서울시 영등포구 여의나루로 123"
                                    value="{{old('address')}}" required>
                             @if ($errors->signUp->has('address'))
                                 <span class="help-block">
@@ -126,7 +127,7 @@
                     <!-- 개인정보 제공 동의 -->
                     <div class="form-group
                     {{ $errors->signUp->has('agree') ? ' has-error' : '' }}">
-                        <label for="agree" class="col-md-4 control-label">(필수)개인정보 수집/이용 동의</label>
+                        <label for="agree" class="col-md-5 control-label">(필수)개인정보 수집/이용 동의</label>
 
                         <div class="col-md-1">
                             <input id="agree" type="checkbox" class="form-control" name="agree"
@@ -139,7 +140,7 @@
                             @endif
                         </div>
 
-                        <label for="adAgree" class="col-md-4 control-label">(선택) 광고성 정보 수신 동의</label>
+                        <label for="adAgree" class="col-md-5 control-label">(선택) 광고성 정보 수신 동의</label>
 
                         <div class="col-md-1">
                             <input id="adAgree" type="checkbox" class="form-control" name="adAgree"

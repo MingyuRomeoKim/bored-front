@@ -88,7 +88,7 @@ class AuthController extends Controller
             ],
             'passwordCheck' => 'required|same:password',
             'regionId' => 'required|string',
-            'phone' => 'required|string|regex:/^01[0-9]{8,9}$/',
+            'phone' => 'required|string|regex:/^01[0-9]-\d{3,4}-\d{4}$/',
             'address' => 'required|string',
             'agree' => 'required|accepted'
         ]);
@@ -96,6 +96,6 @@ class AuthController extends Controller
         $response = $this->authService->signUp(request: $request);
         $this->isResponseFailed($response);
 
-        return redirect()->back()->with('success', '축하드립니다! 회원가입이 완료되었습니다.');
+        return redirect()->back()->with('success', '축하드립니다! 가입하신 이메일로 승인 관련 URL을 보내드렸습니다. 해당 URL을 클릭하시면 회원가입이 완료됩니다.');
     }
 }
