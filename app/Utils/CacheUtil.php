@@ -8,14 +8,15 @@ class CacheUtil
 {
     public static function clearCacheByPattern($prefix)
     {
-        // 패턴에 해당하는 Redis 키 검색
-        $connection = Redis::connection('cache');
-        $keys = $connection->keys('*'.$prefix . '*');
+        $connection = Redis::connection('cache')->client();
+        $cursor = 0;
+        do {
+            [$cursor, $keys] = $connection->scan($cursor, ['MATCH' => '*' . $prefix . '*', 'COUNT' => 1000]);
 
-        // 각 키에 대해 캐시 삭제
-        foreach ($keys as $key) {
-            $connection->del($key);
-        }
+            foreach ($keys as $key) {
+                $connection->executeRaw(['DEL', $key]); // Native DEL 명령 실행
+            }
+        } while ($cursor > 0);
     }
 
     // 캐시 생성

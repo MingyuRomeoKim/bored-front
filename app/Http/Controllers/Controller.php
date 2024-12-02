@@ -40,7 +40,13 @@ abstract class Controller
 
     public function getUserData(): ?array
     {
-        return json_decode(request()->cookie('userData'), true) ?? null;
+        $userData = json_decode(request()->cookie('userData'), true) ?? null;
+
+        if (is_null($userData)) {
+            return throw new BoredTokenException(BoredErrorCode::$COMMON_NOT_LOGIN['message'], BoredErrorCode::$COMMON_NOT_LOGIN['code']);
+        }
+
+        return $userData;
     }
 
     /**
@@ -51,7 +57,7 @@ abstract class Controller
         $accessToken = $this->getUserData()['accessToken'] ?? null;
 
         if (is_null($accessToken)) {
-            return throw new BoredTokenException(BoredErrorCode::$COMMON_NOT_LOGIN['message'], BoredErrorCode::$COMMON_NOT_LOGIN['code']);
+            return throw new BoredTokenException(BoredErrorCode::$JWT_INVALID['message'], BoredErrorCode::$JWT_INVALID['code']);
         }
 
         return $accessToken;

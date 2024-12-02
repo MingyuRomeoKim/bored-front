@@ -60,7 +60,6 @@ class RegionController extends Controller
             }
         }
 
-
         return view('retro.region.list', $data);
     }
 
@@ -131,7 +130,7 @@ class RegionController extends Controller
         $data['themes'] = $this->themeService->getRegionThemesByRegionTitleEn($regionTitleEn);
         $data['post'] = $this->postService->getDetail($postId);
 
-        return view('retro/show', $data);
+        return view('retro.show', $data);
     }
 
     /**
