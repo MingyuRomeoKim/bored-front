@@ -54,8 +54,10 @@ class RegionController extends Controller
 
             $result = $this->postService->getThemePostsByThemeTitleEn($themeTitleEn, $pageableDto);
 
-            $data['posts'] = $result['items'];
-            $data['pagination'] = $result['paginationInfo'];
+            if ($result !== null) {
+                $data['posts'] = $result['items'] ?? null;
+                $data['pagination'] = $result['paginationInfo'] ?? null;
+            }
         }
 
 
