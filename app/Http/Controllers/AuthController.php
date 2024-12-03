@@ -104,6 +104,8 @@ class AuthController extends Controller
         if ($request->has('token')) {
             $this->authService->confirm($request->input('token'));
 
+            $this->authService->logout($request->input('token'));
+
             return redirect('/')->with('success', '축하드립니다! 이메일 인증이 완료되었습니다.');
         }
 
