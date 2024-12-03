@@ -16,6 +16,19 @@ class ThemeService extends BaseService
         parent::__construct();
     }
 
+    public function getTheme(string $themeId)
+    {
+        $cacheKey = 'theme_' . $themeId;
+        $url = $this->url . '/api/v1/article/theme/' . $themeId;
+
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
+            $this->isResponseFailed($response);
+
+            return $response->json('result');
+        });
+    }
+
     public function getThemes() {
         $cacheKey = 'theme_lists';
         $url = $this->url . '/api/v1/article/theme/lists';;
@@ -49,13 +62,13 @@ class ThemeService extends BaseService
      * @throws BoredTokenException
      * @throws ConnectionException
      */
-    public function getRegionThemesByRegionId(string $regionId, string $accessToken)
+    public function getRegionThemesByRegionId(string $regionId)
     {
         $cacheKey = 'region_themes_' . $regionId;
         $url = $this->url . "/api/v1/article/region/{$regionId}/themes";
 
-        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $accessToken) {
-            $response = Http::withToken($accessToken)->get($url);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
             $this->isResponseFailed($response);
 
             return $response->json('result');

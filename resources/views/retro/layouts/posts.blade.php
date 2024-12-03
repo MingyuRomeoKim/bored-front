@@ -38,7 +38,7 @@
 
                 @foreach($posts as $key => $post)
                     <a class="app-line" onclick="ga('send', 'event', 'appslist', 'goSite');"
-                       href="/region/{{request()->segment(2)}}/theme/{{request()->segment(4)}}/post/{{$post['id']}}">
+                       href="/post/{{$post['id']}}">
                         <div class="item-list row">
 
                             <div class="col-sm-1 " style="width: 40px;">

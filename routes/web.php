@@ -5,15 +5,23 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\PostController;
 
 Route::get('/', [MainController::class, 'index']);
 
 Route::prefix('region')->group(function (){
-    Route::get('/{regionTitleEn}', [RegionController::class, 'index'])->name('region.index');
-    Route::get('/{regionTitleEn}/theme/{themeTitleEn}', [RegionController::class, 'index'])->name('region.theme.index');
-    Route::get('/{regionTitleEn}/theme/{themeTitleEn}/write',[RegionController::class, 'write']);
-    Route::post('/{regionTitleEn}/theme/{themeTitleEn}/write',[RegionController::class, 'save']);
-    Route::get('/{regionTitleEn}/theme/{themeTitleEn}/post/{postId}',[RegionController::class, 'show']);
+    Route::get('/{regionId}', [RegionController::class, 'index'])->name('region.index');
+});
+
+Route::prefix('theme')->group(function (){
+    Route::get('/{themeId}', [ThemeController::class, 'index'])->name('theme.index');
+    Route::get('/{themeId}/write',[ThemeController::class, 'write']);
+    Route::post('/{themeId}/write',[ThemeController::class, 'save']);
+});
+
+Route::prefix('post')->group(function (){
+    Route::get('/{postId}',[PostController::class, 'show']);
 });
 
 Route::prefix('comment')->group(function (){

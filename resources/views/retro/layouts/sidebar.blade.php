@@ -7,9 +7,11 @@
                         <h5 class="list-title"><strong>카테고리</strong></h5>
                         <ul class=" list-unstyled">
                             @foreach($themes as $key => $theme)
-                                <li class="{{$theme['titleEn'] == request()->segment((4)) ? "chooseLi" : ""}}">
+                                <li class="{{
+                                ($theme['id'] == request()->segment(2)) || (isset($chooseTheme) && $theme['id'] == $chooseTheme['id']) ? "chooseLi" : ""
+                                }}">
                                     <a class="app-genres"
-                                       href="/{{request()->segment(1)}}/{{request()->segment(2)}}/theme/{{$theme['titleEn']}}">
+                                       href="/theme/{{$theme['id']}}">
                                         {{$theme['title']}}
                                     </a>
                                 </li>
@@ -21,9 +23,9 @@
                     <br>
                 @endif
 
-                @if(request()->segment(3) == 'theme' && request()->segment(4) != null)
+                @if(request()->segment(1) == 'theme' && request()->segment(2) != null)
                     <a class="btn btn-lg btn-primary btn-block"
-                       href="/{{request()->segment(1)}}/{{request()->segment(2)}}/{{request()->segment(3)}}/{{request()->segment(4)}}/write">
+                       href="/theme/{{request()->segment(2)}}/write">
                         글쓰기
                     </a>
                     <br/>

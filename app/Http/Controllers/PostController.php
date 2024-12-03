@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Dtos\Requests\PageableDto;
-use App\Dtos\Requests\PostCreateRequestDto;
 use App\Exceptions\BoredTokenException;
 use App\Services\AuthService;
 use App\Services\PostService;
@@ -13,7 +11,7 @@ use App\Utils\CacheUtil;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 
-class RegionController extends Controller
+class PostController extends Controller
 {
     private CacheUtil $cacheUtil;
     public function __construct(PostService $postService, AuthService $authService, ThemeService $themeService, RegionService $regionService, CacheUtil $cacheUtil)
@@ -23,15 +21,14 @@ class RegionController extends Controller
     }
 
     /**
-     * @throws ConnectionException
      * @throws BoredTokenException
+     * @throws ConnectionException
      */
-    public function index(Request $request, string $regionId = null)
+    public function show(string $postId): \Illuminate\View\View
     {
-        // themes
-        $data['themes'] = $this->themeService->getRegionThemesByRegionId($regionId);
+        $data['post'] = $this->postService->getDetail($postId);
+        $data['chooseTheme'] = $data['post']['theme'];
 
-        return view('retro.region.list', $data);
+        return view('retro.show', $data);
     }
-
 }
