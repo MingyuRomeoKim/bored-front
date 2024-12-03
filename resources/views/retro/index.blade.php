@@ -13,7 +13,7 @@
                     @foreach($region['themes'] as $key => $theme)
                         <div class="adds-wrapper">
                             <a class="app-line" onclick="ga('send', 'event', 'appslist', 'goSite');"
-                               href="/region/{{$region['titleEn']}}/theme/{{$theme['titleEn']}}">
+                               href="/theme/{{$theme['id']}}">
                                 <div class="item-list row">
 
                                     <div class="col-sm-2 " style="width: 40px;">
