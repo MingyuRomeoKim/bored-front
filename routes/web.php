@@ -32,6 +32,8 @@ Route::prefix('notice')->group(function (){
     Route::get('/policy', [MainController::class, 'policy']);
 });
 
+Route::get('/auth/confirm',[AuthController::class, 'confirm']);
+
 Route::post('signUp', [AuthController::class, 'signUp'])->name('signUp');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');

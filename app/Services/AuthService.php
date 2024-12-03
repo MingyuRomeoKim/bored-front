@@ -65,6 +65,14 @@ class AuthService extends BaseService
             ->get($url);
 
         $this->isResponseFailed($response);
+    }
 
+    public function confirm(string $accessToken)
+    {
+        $url = $this->url . '/api/v1/auth/signup/confirm/'.$accessToken;
+        $response = Http::get($url);
+        $this->isResponseFailed($response);
+
+        return $response->json('result');
     }
 }

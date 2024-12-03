@@ -88,7 +88,7 @@ class AuthController extends Controller
             ],
             'passwordCheck' => 'required|same:password',
             'regionId' => 'required|string',
-            'phone' => 'required|string|regex:/^01[0-9]-\d{3,4}-\d{4}$/',
+            'phone' => 'required|string|regex:/^01[0-9]\d{3,4}\d{4}$/',
             'address' => 'required|string',
             'agree' => 'required|accepted'
         ]);
@@ -97,5 +97,16 @@ class AuthController extends Controller
         $this->isResponseFailed($response);
 
         return redirect()->back()->with('success', '축하드립니다! 가입하신 이메일로 승인 관련 URL을 보내드렸습니다. 해당 URL을 클릭하시면 회원가입이 완료됩니다.');
+    }
+
+    public function confirm(Request $request)
+    {
+        if ($request->has('token')) {
+            $this->authService->confirm($request->input('token'));
+
+            return redirect('/')->with('success', '축하드립니다! 이메일 인증이 완료되었습니다.');
+        }
+
+        return redirect('/')->with('error', '입력하신 토큰값은 잘못되어도 단단히 잘못되었어요..!');
     }
 }

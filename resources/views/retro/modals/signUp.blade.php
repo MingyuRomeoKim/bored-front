@@ -37,8 +37,13 @@
                                 <span class="help-block">
                                 <strong>{{ $errors->signUp->first('email') }}</strong>
                                 </span>
+                            @else
+                                <span class="help-block" style="color: greenyellow">
+                                    이메일로 발송되는 승인 url을 통해 가입이 완료됩니다.
+                                </span>
                             @endif
                         </div>
+
                     </div>
 
                     <div class="form-group
@@ -99,7 +104,7 @@
 
                         <div class="col-md-6">
                             <input id="phone" type="text" class="form-control" name="phone" value="{{old('phone')}}"
-                                   placeholder="010-1234-5678" required>
+                                   placeholder="01012345678" required>
                             @if ($errors->signUp->has('phone'))
                                 <span class="help-block">
                                 <strong>{{ $errors->signUp->first('phone') }}</strong>
