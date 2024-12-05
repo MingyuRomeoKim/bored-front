@@ -42,7 +42,7 @@ class ThemeController extends Controller
             'sort' => $request->query('sort', 'createdAt,desc'),
         ]);
 
-        $result = $this->postService->getThemePostsByThemeTitleEn($data['chooseTheme']['titleEn'], $pageableDto);
+        $result = $this->postService->getThemePostsByThemeId($data['chooseTheme']['id'], $pageableDto);
         if ($result !== null) {
             $data['posts'] = $result['items'] ?? null;
             $data['pagination'] = $result['paginationInfo'] ?? null;

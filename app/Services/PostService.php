@@ -29,15 +29,14 @@ class PostService extends BaseService
      * @throws BoredTokenException
      * @throws ConnectionException
      */
-    public function getThemePostsByThemeId(string $themeId, string $accessToken, PageableDto $pageableDto)
+    public function getThemePostsByThemeId(string $themeId, PageableDto $pageableDto)
     {
         $cacheKey = 'theme_posts_' . $themeId . '_' . Arr::join($pageableDto->toArray(), '_');
         $cacheKey = Str::replace(',', '_', $cacheKey);
         $url = $this->url . '/api/v1/article/theme/' . $themeId . '/posts';
 
-        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $accessToken, $pageableDto) {
-            $response = Http::withToken($accessToken)
-                ->withQueryParameters($pageableDto->toArray())
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url,  $pageableDto) {
+            $response = Http::withQueryParameters($pageableDto->toArray())
                 ->get($url);
             $this->isResponseFailed($response);
 
