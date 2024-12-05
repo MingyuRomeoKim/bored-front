@@ -25,14 +25,10 @@ class ThemeController extends Controller
 
     public function index(Request $request, string $themeId)
     {
-
-        $data = [
-            'posts' => null,
-            'pagination' => null,
-        ];
-
         // chooseTheme
         $data['chooseTheme'] = $this->themeService->getTheme($themeId);
+        $data['chooseRegion'] = $data['chooseTheme']['region'] ?? null;
+        $data['themes'] = $this->themeService->getRegionThemesByRegionId($data['chooseRegion']['id']);
 
         // Posts
         $pageableDto = PageableDto::builder([
@@ -43,10 +39,9 @@ class ThemeController extends Controller
         ]);
 
         $result = $this->postService->getThemePostsByThemeId($data['chooseTheme']['id'], $pageableDto);
-        if ($result !== null) {
-            $data['posts'] = $result['items'] ?? null;
-            $data['pagination'] = $result['paginationInfo'] ?? null;
-        }
+        $data['posts'] = $result['items'] ?? null;
+        $data['pagination'] = $result['paginationInfo'] ?? null;
+
 
         return view('retro.region.list', $data);
     }
@@ -60,6 +55,7 @@ class ThemeController extends Controller
         $accessToken = $this->getAccessTokenKey();
 
         $data['chooseTheme'] = $this->themeService->getTheme($themeId);
+        $data['chooseRegion'] = $data['chooseTheme']['region'] ?? null;
 
         return view('retro.region.write', $data);
     }

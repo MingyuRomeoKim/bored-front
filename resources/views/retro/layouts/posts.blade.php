@@ -75,7 +75,7 @@
         <!--/.pagination-bar -->
     @else
         <div class="alert alert-warning">
-            @if(isset($posts))
+            @if(isset($chooseTheme))
                 <strong>해당 카테고리에는 작성된 글이 아직 없습니다.ㅠ</strong>
             @else
                 <strong>지역 혹은 카테고리를 선택해주세요.</strong>

@@ -20,10 +20,9 @@ class GlobalViewVariablesComposer
 
     public function compose(View $view)
     {
-        $themes = $this->themeService->getThemes();
+//        $themes = $this->themeService->getThemes();
+//        $view->with('themes', $themes);
         $regions = $this->regionService->getRegions();
-
-        $view->with('themes', $themes);
         $view->with('regions', $regions);
 
         $userData = json_decode(Cookie::get('userData'), true);

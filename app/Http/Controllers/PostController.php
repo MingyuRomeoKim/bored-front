@@ -27,7 +27,9 @@ class PostController extends Controller
     public function show(string $postId): \Illuminate\View\View
     {
         $data['post'] = $this->postService->getDetail($postId);
-        $data['chooseTheme'] = $data['post']['theme'];
+        $data['chooseTheme'] = $this->themeService->getTheme($data['post']['theme']['id']);
+        $data['chooseRegion'] = $data['chooseTheme']['region'] ?? null;
+        $data['themes'] = $this->themeService->getRegionThemesByRegionId($data['chooseRegion']['id']);
 
         return view('retro.show', $data);
     }
