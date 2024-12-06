@@ -25,8 +25,14 @@
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-expanded="false"><span style="color: #fefe54">R</span>egion <span
-                                class="caret"></span></a>
+                       aria-expanded="false">
+                        @if(isset($chooseRegion) && $chooseRegion != null)
+                            <span style="color: #fefe54">{{$chooseRegion['title']}}</span>
+                        @else
+                            <span style="color: #fefe54">R</span>egion
+                        @endif
+                         <span class="caret"></span>
+                    </a>
                     @if(isset($regions) && is_array($regions) && count($regions) > 0)
                         <ul class="dropdown-menu" role="menu">
                             @foreach($regions as $key => $region)

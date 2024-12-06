@@ -30,6 +30,7 @@ class RegionController extends Controller
     {
         // themes
         $data['themes'] = $this->themeService->getRegionThemesByRegionId($regionId);
+        $data['chooseRegion'] = $this->regionService->findById($regionId);
 
         return view('retro.region.list', $data);
     }

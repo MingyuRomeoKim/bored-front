@@ -28,17 +28,30 @@ class RegionService extends BaseService
         });
     }
 
+    public function findById(String $regionId)
+    {
+        $cacheKey = 'region_detail_' . $regionId;
+        $url = $this->url . '/api/v1/article/region/' . $regionId;
+
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
+            $this->isResponseFailed($response);
+
+            return $response->json('result');
+        });
+    }
+
     /**
      * @throws ConnectionException
      * @throws BoredTokenException
      */
-    public function findByTitleEn(String $titleEn, $accessToken)
+    public function findByTitleEn(String $titleEn)
     {
         $cacheKey = 'region_detail_titleEn_' . $titleEn;
         $url = $this->url . '/api/v1/article/region/detail/' . $titleEn;
 
-        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url, $accessToken) {
-            $response = Http::withToken($accessToken)->get($url);
+        return Cache::remember($cacheKey, CacheTtlStatus::getTtl(CacheTtlStatus::MEDIUM), function () use ($url) {
+            $response = Http::get($url);
             $this->isResponseFailed($response);
 
             return $response->json('result');
