@@ -34,6 +34,11 @@ abstract class Controller
     {
         if ($response->failed()) {
             $errorMessage = $response->json();
+
+            if (is_null($errorMessage)) {
+                throw new BoredTokenException(BoredErrorCode::$COMMON_SERVER_ERROR['message'], BoredErrorCode::$COMMON_SERVER_ERROR['code']);
+            }
+
             throw new BoredTokenException($errorMessage['errorMessage'], $errorMessage['errorCode']);
         }
     }

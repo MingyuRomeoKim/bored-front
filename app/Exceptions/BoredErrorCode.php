@@ -33,4 +33,9 @@ class BoredErrorCode
         'code' => 10011,
         'message' => 'JWT 토큰이 유효하지 않음',
     ];
+
+    public static array $COMMON_SERVER_ERROR = [
+        'code' => 500,
+        'message' => '서버 에러',
+    ];
 }
