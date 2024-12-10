@@ -11,15 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('items', function (Blueprint $table) {
+            $table->binary('id',16)->primary();
+            $table->string('name',255)->nullable(false);
+            $table->string('description',500);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         Schema::create('member_items', function (Blueprint $table) {
             $table->binary('id',16)->primary();
             $table->binary('member_id',16);
-            $table->string('item_name',255)->nullable(false);
-            $table->boolean('is_active')->default(false);
+            $table->binary('item_id',16);
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
         });
     }
 
@@ -28,6 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('items');
         Schema::dropIfExists('member_items');
     }
 };
