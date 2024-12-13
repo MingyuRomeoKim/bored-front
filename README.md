@@ -24,6 +24,15 @@ docker-compose -f docker-compose-local.yml up -d
 docker-compose -f docker-compose-local.yml down
 ```
 
+[2-4] production 실행시 docker-compose-production.yml 파일을 기준으로 컨테이너를 생성합니다.
+```bash
+  
+# 실행
+docker-compose -f docker-compose-production.yml up -d
+# 종료
+docker-compose -f docker-compose-production.yml down
+```
+
 ## 3. 프로젝트 실행
 [3-1] 컴포저 설치하기
 ```bash
