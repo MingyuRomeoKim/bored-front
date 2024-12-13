@@ -28,9 +28,9 @@ docker-compose -f docker-compose-local.yml down
 ```bash
   
 # 실행
-docker-compose -f docker-compose-production.yml up -d
+docker-compose -f docker-compose-prod.yml up -d
 # 종료
-docker-compose -f docker-compose-production.yml down
+docker-compose -f docker-compose-prod.yml down
 ```
 
 ## 3. 프로젝트 실행
